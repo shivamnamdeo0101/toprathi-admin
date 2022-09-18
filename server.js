@@ -9,7 +9,7 @@ const cors = require('cors');
 connectDB();
 
 app.use(cors({
-  origin:"http://localhost:3000"
+  origin:["http://localhost:3000","https://toprathi-api.herokuapp.com"]
 }));
 app.use(express.json());
 
