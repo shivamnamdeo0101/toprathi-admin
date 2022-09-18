@@ -143,7 +143,8 @@ const sendToken = (user, statusCode, res) => {
     httpOnly: true,
     sameSite: "lax",
   });
-  
 
-  res.status(statusCode).json({ sucess: true, data:user });
+  const data = {user,token}
+
+  res.status(statusCode).json({ sucess: true, data:data });
 };
