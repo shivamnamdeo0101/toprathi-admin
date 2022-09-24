@@ -45,6 +45,8 @@ const RegisterScreen = ({ history }) => {
 
       dispatch(setUserDetails(data.data))
 
+      
+
       localStorage.setItem("authToken", data.token);
 
       history.push("/");

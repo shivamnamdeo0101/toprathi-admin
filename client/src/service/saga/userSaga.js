@@ -10,7 +10,7 @@ function PutUserData(payload){
         data: payload,
     });
 }
-
+    
 function* workerGetUserFetch(action){
     const response = yield call(PutUserData,action.payload);
     yield put(setUserDetails(response.data.data))

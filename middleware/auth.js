@@ -3,13 +3,14 @@ const ErrorResponse = require("../utils/errorResponse");
 const User = require("../models/User");
 
 exports.protect = async (req, res, next) => {
-  const cookies = req.headers.cookie;
+  
 
-  if(!cookies){
+  if(!(req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer'))){
     return next(new ErrorResponse("Not authorized to access this route", 401));
   }
 
-  const token = cookies.split("=")[1];
+  const token = req.headers.authorization.split(' ')[1]
 
   if (!token) {
     return next(new ErrorResponse("Not authorized to access this route", 401));
@@ -28,6 +29,8 @@ exports.protect = async (req, res, next) => {
 
     next();
   } catch (err) {
+
+    
     return next(new ErrorResponse("Not authorized to access this router", 401));
   }
 };

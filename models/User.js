@@ -17,6 +17,9 @@ const UserSchema = new mongoose.Schema({
       "Please provide a valid email",
     ],
   },
+  education:{
+    type: mongoose.SchemaTypes.Mixed,
+  },
   password: {
     type: String,
     required: [true, "Please add a password"],
@@ -42,8 +45,8 @@ UserSchema.methods.matchPassword = async function (password) {
 };
 
 UserSchema.methods.getSignedJwtToken = function () {
-  return jwt.sign({ id: this._id }, "HIkkjdkjsadbjk98237e982bjsajhadgjhagdhjagd", {
-    expiresIn: "30s",
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE,
   });
 };
 

@@ -137,12 +137,12 @@ exports.resetPassword = async (req, res, next) => {
 const sendToken = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
 
-  res.cookie(String(user._id), token, {
-    path: "/",
-    expires: new Date(Date.now() + 1000 * 30), //30 seconds
-    httpOnly: true,
-    sameSite: "lax",
-  });
+  // res.cookie(String(user._id), token, {
+  //   path: "/",
+  //   expires: new Date(Date.now() + 1000 * 30), //30 seconds
+  //   httpOnly: true,
+  //   sameSite: "lax",
+  // });
 
   const data = {user,token}
 
