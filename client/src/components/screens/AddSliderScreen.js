@@ -6,9 +6,11 @@ import { flushAuthData } from "../../store/UserSlice";
 import LeftSideBar from "../dashboard/LeftSideBar";
 import HeaderComp from "../dashboard/HeaderComp";
 import DashboardComp from "../dashboard/DashboardComp";
+import AddPostComp from "../dashboard/AddPostComp";
+import AddSliderComp from "../dashboard/AddSliderComp";
 
 
-const PrivateScreen = ({history}) => {
+const AddSliderScreen = ({history}) => {
   const [error, setError] = useState("");
   const [privateData, setPrivateData] = useState("");
   const dispatch = useDispatch();
@@ -26,13 +28,13 @@ const PrivateScreen = ({history}) => {
         <HeaderComp />
         <div className="dashboard_flex_row">
             <LeftSideBar />
+            
             <div className='dashboard_comp'>
-              <DashboardComp />
+                <AddSliderComp />
             </div>
-           
         </div>
     </div>
   );
 };
 
-export default PrivateScreen;
+export default AddSliderScreen;

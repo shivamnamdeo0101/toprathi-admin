@@ -1,18 +1,18 @@
 const mongoose = require("mongoose");
 
 
-const NewsSchema = new mongoose.Schema({
+const SlideSchema = new mongoose.Schema({
     author: {
         type: String
     },
     title: {
         type: String
     },
-    content: {
-        type: String
-    },
     image:{
         type:String
+    },
+    content: {
+        type: String
     },
     views: {
         type: Number,
@@ -43,6 +43,6 @@ const NewsSchema = new mongoose.Schema({
 
 });
 
-const News = mongoose.model("News", NewsSchema);
+const Slide = mongoose.model("Slide", SlideSchema);
 
-module.exports = News;
+module.exports = Slide;

@@ -6,18 +6,15 @@ import { flushAuthData } from "../../store/UserSlice";
 import LeftSideBar from "../dashboard/LeftSideBar";
 import HeaderComp from "../dashboard/HeaderComp";
 import DashboardComp from "../dashboard/DashboardComp";
+import EditPostComp from "../dashboard/EditPostComp";
 
 
-const PrivateScreen = ({history}) => {
+const EditPostScreen = ({history}) => {
   const [error, setError] = useState("");
   const [privateData, setPrivateData] = useState("");
   const dispatch = useDispatch();
   const user = useSelector(state=>state.userAuth.user);
-  const logout = async (e)=>{
-    e.preventDefault();
-    dispatch(flushAuthData());
-    history.push("/login");
-  }
+    
   
   return error ? (
     <span className="error-message">{error}</span>
@@ -26,13 +23,13 @@ const PrivateScreen = ({history}) => {
         <HeaderComp />
         <div className="dashboard_flex_row">
             <LeftSideBar />
+            
             <div className='dashboard_comp'>
-              <DashboardComp />
+                <EditPostComp />
             </div>
-           
         </div>
     </div>
   );
 };
 
-export default PrivateScreen;
+export default EditPostScreen;
