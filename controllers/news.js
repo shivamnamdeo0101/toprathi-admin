@@ -108,9 +108,6 @@ exports.remNewsById = async (req, res, next) => {
 
 
 exports.getNews = async (req, res, next) => {
-
-  console.log("page number : " + req.params.page);
-  console.log("per page : " + req.params.perPage);
   var size = req.params.perPage;
   var pageNo = req.params.page; // parseInt(req.query.pageNo)
 

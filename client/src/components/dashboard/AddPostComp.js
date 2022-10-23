@@ -1,40 +1,86 @@
-import React, { useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useForm } from "react-hook-form";
+import { useHistory, useParams } from 'react-router-dom';
 import NewsService from '../../service/api/NewsService';
-
-
+import Select from 'react-select';
 function AddPostComp() {
+    const history = useHistory();
+
     const { newsAdd } = NewsService;
-    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
+    const [image, setimage] = useState("");
+
+
+
+    const options = [
+        { value: 'chocolate', label: 'Chocolate' },
+        { value: 'strawberry', label: 'Strawberry' },
+        { value: 'vanilla', label: 'Vanilla' },
+    ];
+    const [tags, settags] = useState([]);
+    const [news_data, setnews_data] = useState({});
+
+
+
+    const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm(
+    );
+
+
+
 
     const onSubmit = data => {
 
-        console.log(data);
         const res = {
             "title": data.title,
             "content": data.content,
+            "form_link": data.form_link,
             "timestamp": Date.now(),
             "author": "shivam",
-            "image": "https://yaffa-cdn.s3.amazonaws.com/yaffadsp/images/dmImage/SourceImage/news-corp-359.jpg",
+            "image": image ? image : "https://yaffa-cdn.s3.amazonaws.com/yaffadsp/images/dmImage/SourceImage/news-corp-359.jpg",
             "views": 1,
-            "tags": [
-                "Sports"
-            ],
-            "addAt": Date.now(),
+            "tags": tags,
+            "addAt": data.addAt,
             "updatedAt": Date.now()
         }
-        addNewsFun(res)
+        EditNewsFun(res)
         //console.log(res)
         reset()
+        history.push("/")
     };
 
 
-    const addNewsFun = async (data) => {
-        const res = await newsAdd(data);
-        console.log(res);
-    }
+    const EditNewsFun = async (data) => {
+        if (!image) { alert("Please attach image...") }
 
-    
+        if (image) {
+            const res = await newsAdd(data);
+            console.log(res, "RES");
+        }
+    }
+    function encodeImageFileAsURL(file) {
+
+        var reader = new FileReader();
+        reader.onloadend = function () {
+            const imagebase64 = reader.result;
+            setimage(imagebase64)
+        }
+        reader.readAsDataURL(file);
+    }
+    const uploadImage = (file) => {
+        const data = new FormData()
+        data.append("file", file)
+        data.append("upload_preset", "tutorial")
+        data.append("cloud_name", "breellz")
+        fetch("CLOUDINARY_URL=cloudinary://254498432442583:qlgePH-Lq0iMY_A-DJlZh_N-cc4@dtyoyswcx", {
+            method: "post",
+            body: data
+        })
+        .then(resp => resp.json())
+        .then(data => {
+            console.log(data)
+            setimage(data.url)
+        })
+        .catch(err => console.log(err))
+    }
 
     return (
         <div className='add_post_form'>
@@ -56,9 +102,31 @@ function AddPostComp() {
                         {errors.content && <span className='error'>Description field is required</span>}
                     </div>
                     <div className='post_form_comp'>
+                        <label>Form Link (optional)</label>
+                        <input {...register("form_link", { required: false })} />
+
+                    </div>
+                    <div className='post_form_comp'>
                         <label>Image</label>
-                        <input type="file" {...register("image", { required: true })} />
-                        {errors.image && <span className='error'>Image field is required</span>}
+                        <div className='dashboard_articles_comp_center articles_comp'>
+                            <img src={image} />
+                        </div>
+
+                        <input type="file" accept="image/jpeg, image/png" onChange={(e) => uploadImage(e.target.files[0])} />
+
+
+                    </div>
+                    <div className='post_form_comp'>
+                        <label>Tags</label>
+                        <Select
+                            defaultValue={tags}
+                            onChange={settags}
+                            options={options}
+                            isMulti={true}
+
+                            isSearchable={true}
+                        />
+
                     </div>
 
 

@@ -177,6 +177,7 @@ body {
   grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
   padding: 10px;
   cursor: pointer;
+  border-bottom: 1px solid #ccc;
 }
 .articles_action{
   display:flex;
@@ -237,4 +238,9 @@ body {
   flex-direction: row;
   justify-content: space-between;
   padding: 1rem;
+}
+
+/***********multiinput*******/
+.multiinput{
+  width: 80%;
 }

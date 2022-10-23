@@ -11,6 +11,10 @@ const NewsSchema = new mongoose.Schema({
     content: {
         type: String
     },
+
+    form_link:{
+        type:String
+    },
     image:{
         type:String
     },
@@ -30,9 +34,16 @@ const NewsSchema = new mongoose.Schema({
         required: true,
     },
     tags:[ {
+        value: {
             type: String,
+            
+        },
+        label: {
+            type: String,
+            
         }
-    ],
+        
+    }],
     addedAt: {
         type: Number,
     },

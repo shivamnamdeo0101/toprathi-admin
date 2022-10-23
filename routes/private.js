@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { getPrivateRoute} = require("../controllers/private");
 const { addNews,getNews,addSlide,getSlide,editNews,getNewsById,remNewsById} = require("../controllers/news");
-const {updateUser} = require("../controllers/user")
+const {updateUser,getUserById} = require("../controllers/user")
 const { protect } = require("../middleware/auth");
 
 router.route("/").get(protect, getPrivateRoute);
@@ -18,6 +18,8 @@ router.route("/slide").get(getSlide);
 
 
 
-router.route("/user").put(updateUser);
+router.route("/user/:userId").put(updateUser);
+router.route("/user/:userId").get(protect,getUserById);
+
 
 module.exports = router;
