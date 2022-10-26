@@ -112,7 +112,7 @@ function AddPostComp() {
                             <img src={image} />
                         </div>
 
-                        <input type="file" accept="image/jpeg, image/png" onChange={(e) => uploadImage(e.target.files[0])} />
+                        <input type="file" accept="image/jpeg, image/png" onChange={(e) => encodeImageFileAsURL(e.target.files[0])} />
 
 
                     </div>
