@@ -88,6 +88,25 @@ exports.getNewsById = async (req, res, next) => {
 };
 
 
+
+exports.getSlideById = async (req, res, next) => {
+
+  let news = await News.findById(req.params.newsId);
+
+  if (!news) {
+    return res.status(401).json({
+      success: false,
+      msg: "News not found.",
+    });
+  }
+
+  res
+    .status(200)
+    .json({ success: true, data: news, msg: "Success" });
+};
+
+
+
 exports.remNewsById = async (req, res, next) => {
 
   const news = await News.findByIdAndDelete(req.params.newsId);
