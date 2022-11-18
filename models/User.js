@@ -17,6 +17,11 @@ const UserSchema = new mongoose.Schema({
       "Please provide a valid email",
     ],
   },
+  interest: [ {
+    name: {
+        type: String,
+    }
+  }],
   education:{
     type: mongoose.SchemaTypes.Mixed,
   },

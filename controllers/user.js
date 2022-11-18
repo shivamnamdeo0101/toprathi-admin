@@ -1,7 +1,7 @@
 const User = require("../models/User");
 
 exports.updateUser = async (req, res, next) => {
-  const {user_data } = req.body;
+  const {user_data} = req.body;
 
   try {
     // const user = await User.findByIdAndUpdate(req.params.userId, {
@@ -13,7 +13,8 @@ exports.updateUser = async (req, res, next) => {
     const user = await User.findById(req.params.userId)
     user.email =  user_data.email,
     user.username =  user_data.username,
-    user.education = user_data.education
+    user.education = user_data.education,
+    user.interest = user_data.interest
     user.save()
     res.status(200).json({
       success: true,
