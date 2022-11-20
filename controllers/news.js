@@ -4,11 +4,11 @@ const Slide = require("../models/Slide");
 
 // @desc    ADd news
 exports.addNews = async (req, res, next) => {
-  const { title, content, image, timestamp, author, views, tags, addAt, updatedAt } = req.body;
+  const { title, content, image, timestamp, author, views, tags, addAt, updatedAt ,read_more_link,form_link} = req.body;
 
   try {
     const news = await News.create({
-      title, content, image, timestamp, author, views, tags, addAt, updatedAt,
+      title, content, image, timestamp, author, views, tags, addAt, updatedAt,read_more_link,form_link
     });
     res.status(201).json({
       success: true,

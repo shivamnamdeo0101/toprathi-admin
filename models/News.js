@@ -15,6 +15,9 @@ const NewsSchema = new mongoose.Schema({
     form_link:{
         type:String
     },
+    read_more_link:{
+        type:String
+    },
     image:{
         type:String
     },

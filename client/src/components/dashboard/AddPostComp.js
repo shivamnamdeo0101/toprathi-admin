@@ -33,6 +33,7 @@ function AddPostComp() {
             "title": data.title,
             "content": data.content,
             "form_link": data.form_link,
+            "read_more_link":data.read_more_link,
             "timestamp": Date.now(),
             "author": "shivam",
             "image": image ? image : "https://yaffa-cdn.s3.amazonaws.com/yaffadsp/images/dmImage/SourceImage/news-corp-359.jpg",
@@ -104,6 +105,11 @@ function AddPostComp() {
                     <div className='post_form_comp'>
                         <label>Form Link (optional)</label>
                         <input {...register("form_link", { required: false })} />
+
+                    </div>
+                    <div className='post_form_comp'>
+                        <label>Read More Link </label>
+                        <input {...register("read_more_link", { required: false })} />
 
                     </div>
                     <div className='post_form_comp'>

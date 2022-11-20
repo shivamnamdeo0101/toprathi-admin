@@ -11,8 +11,6 @@ exports.updateUser = async (req, res, next) => {
     // });
 
     const user = await User.findById(req.params.userId)
-    user.email =  user_data.email,
-    user.username =  user_data.username,
     user.education = user_data.education,
     user.interest = user_data.interest
     user.save()
