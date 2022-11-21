@@ -14,6 +14,23 @@ export default {
         .catch((error) => {
           return error.response;
         });
-    }
+    },
+
+    userForgotPassword: async function (payload) {
+      return axios.request({
+          method: 'post',
+          url: `${endPoint}auth/forgotpassword`,
+          data: payload,
+          
+      })
+      .then((res) => {
+        console.log(res)
+        return res.data;
+
+      })
+      .catch((error) => {
+        return error.response;
+      });
+  }
 
 };

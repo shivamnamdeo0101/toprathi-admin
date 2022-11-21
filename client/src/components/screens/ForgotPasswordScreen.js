@@ -1,29 +1,26 @@
 import { useState } from "react";
 import axios from "axios";
 import "./ForgotPasswordScreen.css";
-
+import UserService from "../../service/api/UserService"
 const ForgotPasswordScreen = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const {userForgotPassword} = UserService;
 
   const forgotPasswordHandler = async (e) => {
     e.preventDefault();
 
-    const config = {
-      header: {
-        "Content-Type": "application/json",
-      },
-    };
-
+   
     try {
-      const { data } = await axios.post(
-        "/auth/forgotpassword",
-        { email },
-        config
-      );
 
-      setSuccess(data.data);
+      console.log(email)
+      userForgotPassword(email)
+      .then((res)=>{
+        console.log(res)
+        //setSuccess(res.data);
+      })
+      
     } catch (error) {
       setError(error.response.data.error);
       setEmail("");

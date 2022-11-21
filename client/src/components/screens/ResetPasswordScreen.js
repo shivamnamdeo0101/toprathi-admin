@@ -13,12 +13,6 @@ const ResetPasswordScreen = ({ history, match }) => {
   const resetPasswordHandler = async (e) => {
     e.preventDefault();
 
-    const config = {
-      header: {
-        "Content-Type": "application/json",
-      },
-    };
-
     if (password !== confirmPassword) {
       setPassword("");
       setConfirmPassword("");
@@ -30,11 +24,11 @@ const ResetPasswordScreen = ({ history, match }) => {
 
     try {
       const { data } = await axios.put(
-        `/api/auth/passwordreset/${match.params.resetToken}`,
+        `auth/passwordreset/${match.params.resetToken}`,
         {
           password,
         },
-        config
+        
       );
 
       console.log(data);

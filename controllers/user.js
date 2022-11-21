@@ -3,6 +3,9 @@ const User = require("../models/User");
 exports.updateUser = async (req, res, next) => {
   const {user_data} = req.body;
 
+
+  console.log(user_data)
+
   try {
     // const user = await User.findByIdAndUpdate(req.params.userId, {
     //   email: user_data.email,
