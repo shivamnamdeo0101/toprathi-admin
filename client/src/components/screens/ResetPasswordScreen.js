@@ -1,14 +1,20 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState,useEffect } from "react";
+import { Link,useParams } from "react-router-dom";
 import axios from "axios";
-
+import UserService from "../../service/api/UserService";
 import "./ResetPasswordScreen.css";
+import { useSelector } from "react-redux";
 
 const ResetPasswordScreen = ({ history, match }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const {userResetPassword,userFetch} = UserService;
+  const user = useSelector(state=>state.userAuth);
+  const [user_data, setuser_data] = useState({})
+  const {resetToken} = useParams();
+  
 
   const resetPasswordHandler = async (e) => {
     e.preventDefault();
@@ -23,16 +29,19 @@ const ResetPasswordScreen = ({ history, match }) => {
     }
 
     try {
-      const { data } = await axios.put(
-        `auth/passwordreset/${match.params.resetToken}`,
-        {
-          password,
-        },
+      const payload = {
+        "resetToken":resetToken,
+        "password":password
+      }
         
-      );
+      userResetPassword(payload)
+      .then((res)=>{
+        if(res.success){
+          setSuccess(res.data);
+        }
+      })
 
-      console.log(data);
-      setSuccess(data.data);
+      
     } catch (error) {
       setError(error.response.data.error);
       setTimeout(() => {

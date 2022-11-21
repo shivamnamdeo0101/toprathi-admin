@@ -9,14 +9,15 @@ const cors = require('cors');
 connectDB();
 
 app.use(cors({
-  origin:["http://localhost:3000","https://toprathi-api.herokuapp.com"]
+  origin: ["http://localhost:3000", "https://toprathi-api.herokuapp.com"]
 }));
 app.use(express.json());
 
 
-var distDir = __dirname + "/dist/";
-app.use(express.static(distDir));
-
+app.use(express.static("client/build"));
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname,"client","build", "index.html"));
+});
 
 app.get("/", (req, res, next) => {
   res.send("Api running");
