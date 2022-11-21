@@ -14,6 +14,10 @@ app.use(cors({
 app.use(express.json());
 
 
+var distDir = __dirname + "/dist/";
+app.use(express.static(distDir));
+
+
 app.get("/", (req, res, next) => {
   res.send("Api running");
 });
@@ -21,6 +25,7 @@ app.get("/", (req, res, next) => {
 // Connecting Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/private", require("./routes/private"));
+
 
 // Error Handler Middleware
 app.use(errorHandler);

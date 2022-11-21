@@ -1,1 +1,1 @@
-export const endPoint = '/api/';
+export const endPoint = 'https://toprathi-api.herokuapp.com/api/';

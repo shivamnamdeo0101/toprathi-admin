@@ -14,11 +14,10 @@ const ForgotPasswordScreen = () => {
    
     try {
 
-      console.log(email)
       userForgotPassword(email)
       .then((res)=>{
         console.log(res)
-        //setSuccess(res.data);
+        setSuccess(res.data);
       })
       
     } catch (error) {

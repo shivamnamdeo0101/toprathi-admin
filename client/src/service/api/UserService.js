@@ -17,11 +17,16 @@ export default {
     },
 
     userForgotPassword: async function (payload) {
+      var data = JSON.stringify({
+        "email": payload
+      });
       return axios.request({
           method: 'post',
           url: `${endPoint}auth/forgotpassword`,
-          data: payload,
-          
+          data: data,
+          headers: { 
+            'Content-Type': 'application/json'
+          },
       })
       .then((res) => {
         console.log(res)
