@@ -5,8 +5,9 @@
   "main": "server.js",
   "scripts": {
     "server": "nodemon server",
+    "build":"npm run build --prefix client",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run build\" \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
