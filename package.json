@@ -10,7 +10,7 @@
   "main": "server.js",
   "scripts": {
     "server": "nodemon server",
-    "client": "yarn start --prefix client",
+    "client": "npm start --prefix client",
     "build": "yarn build --prefix client",
     "dev": "concurrently   \"npm run build\" \"npm run server\" \"npm run client\""
   },
