@@ -1,4 +1,5 @@
 require("dotenv").config({ path: "./config.env" });
+require('./helpers/init_redis')
 
 const express = require("express");
 const app = express();
@@ -6,6 +7,8 @@ const connectDB = require("./config/db");
 const errorHandler = require("./middleware/error");
 const cors = require('cors');
 const path = require('path');
+
+
 
 connectDB();
 
@@ -19,6 +22,7 @@ app.use(express.json());
 // app.get('*', (request, response) => {
 //   response.sendFile(path.join(__dirname + '/build/index.html'));
 // });
+
 
 
 app.get("/", (req, res, next) => {

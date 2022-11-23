@@ -4,7 +4,7 @@
   "engines": {
     "node": "16.15.1 ",
     "npm": "8.11.0",
-    "yarn":"1.22.19"
+    "yarn": "1.22.19"
   },
   "description": "",
   "main": "server.js",
@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async-redis": "^2.0.0",
     "axios": "^0.27.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -29,7 +30,9 @@
     "path": "^0.12.7",
     "react-hook-form": "^7.37.0",
     "react-toastify": "^9.0.8",
-    "redux-persist": "^6.0.0"
+    "redis": "^4.5.0",
+    "redux-persist": "^6.0.0",
+    "response-time": "^2.3.2"
   },
   "devDependencies": {
     "concurrently": "^5.3.0",
