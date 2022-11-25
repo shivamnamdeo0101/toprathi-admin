@@ -22,7 +22,6 @@ router.route("/slide").post(addSlide);
 router.route("/slide").get(getSlide);
 
 
-router.route("/slide/:page/:perPage").get(getNewsCache);
 
 
 

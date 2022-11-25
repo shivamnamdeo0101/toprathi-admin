@@ -11,6 +11,22 @@ const NewsSchema = new mongoose.Schema({
     content: {
         type: String
     },
+    news_type:{
+        type: String
+    },
+
+    poll_title:{
+        type:String
+    },
+    poll_user_responses:[ {
+        response: {
+            type: String,
+        },
+        user_id: {
+            type: String,
+        }
+    }],
+
 
     form_link:{
         type:String

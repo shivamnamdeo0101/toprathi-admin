@@ -1,0 +1,1 @@
+android:usesCleartextTraffic="true" ko hatana h bad me

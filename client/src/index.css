@@ -219,6 +219,12 @@ body {
   padding: 10px 12px;
   font-size: 1rem;
 }
+
+.post_form_comp>select{
+  padding: 10px 12px;
+  font-size: 1rem;
+}
+
 .button{
   margin-top: 10px;
   font-size: 1rem;

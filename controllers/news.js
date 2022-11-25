@@ -1,14 +1,20 @@
 const News = require("../models/News");
 const Slide = require("../models/Slide");
+const {setCache,getCache,clearCache } = require("../middleware/redisCache")
 
 
 // @desc    ADd news
 exports.addNews = async (req, res, next) => {
-  const { title, content, image, timestamp, author, views, tags, addAt, updatedAt ,read_more_link,form_link} = req.body;
+  const { title, content, image, timestamp, author, views, tags, addAt, updatedAt ,read_more_link,form_link,news_type,poll_title,poll_user_responses} = req.body;
 
   try {
+
+    let news_key = "news"+1+""+5;
+    await clearCache("news_array.id="+news_key)
+
+
     const news = await News.create({
-      title, content, image, timestamp, author, views, tags, addAt, updatedAt,read_more_link,form_link
+      title, content, image, timestamp, author, views, tags, addAt, updatedAt,read_more_link,form_link,news_type,poll_title,poll_user_responses
     });
     res.status(201).json({
       success: true,
@@ -23,9 +29,12 @@ exports.addSlide = async (req, res, next) => {
   const { title, content, image, timestamp, author, views, tags, addAt, updatedAt } = req.body;
 
   try {
+
+
     const slide = await Slide.create({
       title, content, image, timestamp, author, views, tags, addAt, updatedAt,
     });
+    
     res.status(201).json({
       success: true,
       data: slide,
@@ -39,7 +48,7 @@ exports.addSlide = async (req, res, next) => {
 
 exports.getSlide = async (req, res, next) => {
 
-  let slide = await Slide.find({});
+  let slide = await News.find({ news_type: { $regex: 'slide' } });
 
   // const news = await News.find({}, query).populate({ path: 'category', select: ['_id', 'category_name'] }).populate({ path: 'addedBy', select: ['name', 'email']})
   res.json({
@@ -51,6 +60,8 @@ exports.getSlide = async (req, res, next) => {
 
 exports.editNews = async (req, res, next) => {
 
+  let news_key = "news"+1+""+5;
+  await clearCache("news_array.id="+news_key)
   let news = await News.findById(req.params.newsId);
 
   if (!news) {
@@ -127,8 +138,23 @@ exports.remNewsById = async (req, res, next) => {
 
 
 exports.getNews = async (req, res, next) => {
+
+  
+
+
   var size = req.params.perPage;
   var pageNo = req.params.page; // parseInt(req.query.pageNo)
+
+  let news_key = "news"+pageNo+""+size;
+  let news = await getCache("news_array.id=",news_key)
+
+  if(news){
+    return res.json({
+      success: true,
+      count: news.length,
+      data: news,
+    });
+  }
 
   var query = {};
   if (pageNo < 0 || pageNo === 0) {
@@ -142,14 +168,16 @@ exports.getNews = async (req, res, next) => {
   query.skip = size * (pageNo - 1);
   query.limit = size;
 
-  let news = await News.find({});
+  news = await News.find({});
 
-  let result = await News.find({})
+   let result = await News.find({})
     .sort({ 'timestamp': 'desc' })
-    .populate({ path: "addAt", select: ["_id"] })
+    .populate({ path: "timestamp", select: ["_id"] })
     .sort("-_id")
     .limit(Number(query.limit))
     .skip(Number(query.skip));
+
+  //setCache("news_array.id=",news_key,result)
 
   // const news = await News.find({}, query).populate({ path: 'category', select: ['_id', 'category_name'] }).populate({ path: 'addedBy', select: ['name', 'email']})
   res.json({

@@ -39,8 +39,11 @@ function AddPostComp() {
             "image": image ? image : "https://yaffa-cdn.s3.amazonaws.com/yaffadsp/images/dmImage/SourceImage/news-corp-359.jpg",
             "views": 1,
             "tags": tags,
-            "addAt": data.addAt,
-            "updatedAt": Date.now()
+            "addAt":Date.now(),
+            "updatedAt": Date.now(),
+            "poll_user_responses":[],
+            "poll_title":data.poll_title,
+            "news_type":data.news_type
         }
         EditNewsFun(res)
         //console.log(res)
@@ -110,7 +113,22 @@ function AddPostComp() {
                     <div className='post_form_comp'>
                         <label>Read More Link </label>
                         <input {...register("read_more_link", { required: false })} />
+                        {errors.read_more_link && <span className='error'>Read More Link field is required</span>}
+                    </div>
+                    <div className='post_form_comp'>
+                        <label>News Type </label>
+                        <select {...register("news_type", { required: false })}  >
+                            <option value="feed">feed</option>
+                            <option value="slide">slide</option>
+                            <option value="insight">insight</option>
+                        </select>
+                        {errors.news_type && <span className='error'>News Type field is required</span>}
 
+                    </div>
+                    <div className='post_form_comp'>
+                        <label>Poll Title ( IF THIS IS FOR POLL)</label>
+                        <input {...register("poll_title", { required: false })} />
+                        {errors.poll_title && <span className='error'>Poll Title field is required</span>}
                     </div>
                     <div className='post_form_comp'>
                         <label>Image</label>

@@ -1,5 +1,7 @@
 const User = require("../models/User");
 
+const {setCache,getCache} = require("../middleware/redisCache")
+
 exports.updateUser = async (req, res, next) => {
   const {user_data} = req.body;
 
@@ -30,8 +32,21 @@ exports.updateUser = async (req, res, next) => {
 exports.getUserById = async (req, res, next) => {
 
   try {
+
+    // let user = await getCache("user.id=",req.params.userId);
+
+    // if(user){
+
+    //   return res.status(200).json({
+    //     success: true, data: user, msg: "Success",id:req.params.userId
+    //   });
+    // }
+
+
+
     let user = await User.findById(req.params.userId);
 
+    //setCache("users.id=",req.params.userId,user)
     if (!user) {
       return res.status(401).json({
         success: false,
