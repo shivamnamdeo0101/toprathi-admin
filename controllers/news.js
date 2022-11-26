@@ -46,6 +46,20 @@ exports.addSlide = async (req, res, next) => {
 };
 
 
+exports.searchNews = async (req, res, next) => {
+  let query  = req.params.q;
+  let search = await News.find({ title: { $regex: query } });
+
+  // const news = await News.find({}, query).populate({ path: 'category', select: ['_id', 'category_name'] }).populate({ path: 'addedBy', select: ['name', 'email']})
+  res.json({
+    success: true,
+    query:query,
+    count: search.length,
+    data: search,
+   
+  });
+};
+
 exports.getSlide = async (req, res, next) => {
 
   let slide = await News.find({ news_type: { $regex: 'slide' } });
@@ -55,6 +69,16 @@ exports.getSlide = async (req, res, next) => {
     success: true,
     count: slide.length,
     data: slide,
+  });
+};
+
+exports.getInsight = async (req, res, next) => {
+  let insight = await News.find({ news_type: { $regex: 'insight' } });
+  // const news = await News.find({}, query).populate({ path: 'category', select: ['_id', 'category_name'] }).populate({ path: 'addedBy', select: ['name', 'email']})
+  res.json({
+    success: true,
+    count: insight.length,
+    data: insight,
   });
 };
 
@@ -120,6 +144,9 @@ exports.getSlideById = async (req, res, next) => {
 
 exports.remNewsById = async (req, res, next) => {
 
+  let news_key = "news"+1+""+5;
+  await clearCache("news_array.id="+news_key)
+  await clearCache("news_array.id="+"total_news")
   const news = await News.findByIdAndDelete(req.params.newsId);
   if (!news) {
     return res.status(401).json({
@@ -139,19 +166,17 @@ exports.remNewsById = async (req, res, next) => {
 
 exports.getNews = async (req, res, next) => {
 
-  
-
-
   var size = req.params.perPage;
   var pageNo = req.params.page; // parseInt(req.query.pageNo)
 
   let news_key = "news"+pageNo+""+size;
   let news = await getCache("news_array.id=",news_key)
+  let total_news_count = await getCache("news_array.id=","total_news")
 
   if(news){
     return res.json({
       success: true,
-      count: news.length,
+      count: total_news_count,
       data: news,
     });
   }
@@ -165,24 +190,24 @@ exports.getNews = async (req, res, next) => {
     return res.json(response);
   }
 
+  total_news = await News.find({});
+
   query.skip = size * (pageNo - 1);
   query.limit = size;
 
-  news = await News.find({});
-
    let result = await News.find({})
     .sort({ 'timestamp': 'desc' })
-    .populate({ path: "timestamp", select: ["_id"] })
+    .populate({ path: "addAt", select: ["_id"] })
     .sort("-_id")
     .limit(Number(query.limit))
     .skip(Number(query.skip));
 
-  //setCache("news_array.id=",news_key,result)
-
+  setCache("news_array.id=",news_key,result)
+  setCache("news_array.id=","total_news",total_news.length)
   // const news = await News.find({}, query).populate({ path: 'category', select: ['_id', 'category_name'] }).populate({ path: 'addedBy', select: ['name', 'email']})
   res.json({
     success: true,
-    count: news.length,
+    count: total_news.length,
     limit: Number(query.limit),
     data: result,
   });

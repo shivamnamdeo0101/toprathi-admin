@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { getPrivateRoute} = require("../controllers/private");
-const { addNews,getNews,addSlide,getSlide,editNews,getNewsById,remNewsById,getSlideById} = require("../controllers/news");
+const { addNews,getNews,addSlide,getSlide,editNews,getNewsById,remNewsById,getSlideById, getInsight, searchNews} = require("../controllers/news");
 
 const {getNewsCache} = require("../middleware/redisCache");
 
@@ -20,7 +20,9 @@ router.route("/news/:page/:perPage").get(getNews);
 
 router.route("/slide").post(addSlide);
 router.route("/slide").get(getSlide);
+router.route("/insight").get(getInsight);
 
+router.route("/search/:q").get(searchNews);
 
 
 
