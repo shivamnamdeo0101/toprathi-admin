@@ -6,7 +6,7 @@ export default {
   newsGet: async function (page, perPage) {
     return axios.request({
       method: 'get',
-      url: `${endPoint}private/news/${page}/${perPage}`,
+      url: `${endPoint}private/news-admin/${page}/${perPage}`,
     })
       .then((res) => {
         return res.data;

@@ -46,10 +46,12 @@ exports.addSlide = async (req, res, next) => {
 };
 
 
-exports.searchNews = async (req, res, next) => {
-  let query  = req.params.q;
-  let search = await News.find({ title: { $regex: query } });
 
+exports.searchNews = async (req, res, next) => {
+  let query  = req.params.query;
+  let search =  await News.find({ "title" : { $regex : new RegExp(query, "i") } });
+  
+ 
   // const news = await News.find({}, query).populate({ path: 'category', select: ['_id', 'category_name'] }).populate({ path: 'addedBy', select: ['name', 'email']})
   res.json({
     success: true,
@@ -83,7 +85,6 @@ exports.getInsight = async (req, res, next) => {
 };
 
 exports.editNews = async (req, res, next) => {
-
   let news_key = "news"+1+""+5;
   await clearCache("news_array.id="+news_key)
   let news = await News.findById(req.params.newsId);
@@ -107,6 +108,7 @@ exports.editNews = async (req, res, next) => {
 
 
 exports.getNewsById = async (req, res, next) => {
+
 
   let news = await News.findById(req.params.newsId);
 
@@ -195,7 +197,7 @@ exports.getNews = async (req, res, next) => {
   query.skip = size * (pageNo - 1);
   query.limit = size;
 
-   let result = await News.find({})
+   let result = await News.find()
     .sort({ 'timestamp': 'desc' })
     .populate({ path: "addAt", select: ["_id"] })
     .sort("-_id")
@@ -211,4 +213,136 @@ exports.getNews = async (req, res, next) => {
     limit: Number(query.limit),
     data: result,
   });
+};
+
+
+exports.getNewsAdmin = async (req, res, next) => {
+
+  var size = req.params.perPage;
+  var pageNo = req.params.page; // parseInt(req.query.pageNo)
+
+  let news_key = "news"+pageNo+""+size;
+  let news = await getCache("news_array.id=",news_key)
+  let total_news_count = await getCache("news_array.id=","total_news")
+
+  if(news){
+    return res.json({
+      success: true,
+      count: total_news_count,
+      data: news,
+    });
+  }
+
+  var query = {};
+  if (pageNo < 0 || pageNo === 0) {
+    response = {
+      success: false,
+      message: "invalid page number, should start with 1",
+    };
+    return res.json(response);
+  }
+
+  total_news = await News.find({});
+
+  query.skip = size * (pageNo - 1);
+  query.limit = size;
+
+   let result = await News.find({})
+    .sort({ 'timestamp': 'desc' })
+    .populate({ path: "addAt", select: ["_id"] })
+    .sort("-_id")
+    .limit(Number(query.limit))
+    .skip(Number(query.skip));
+
+
+  
+  setCache("news_array.id=",news_key,result)
+  setCache("news_array.id=","total_news",total_news.length)
+  // const news = await News.find({}, query).populate({ path: 'category', select: ['_id', 'category_name'] }).populate({ path: 'addedBy', select: ['name', 'email']})
+  res.json({
+    success: true,
+    count: total_news.length,
+    limit: Number(query.limit),
+    data: result,
+  });
+};
+
+
+
+
+exports.addPoll = async (req, res, next) => {
+
+  try {   
+
+    const post = await News.findById(req.body.postId)
+
+    if (!post) {
+      return res.status(401).json({
+        success: false,
+        msg: "Post Not found.",
+      });
+    }
+
+    await post.poll_user_responses.push({"userId":req.body.userId,"msg":req.body.msg})
+    await post.save()
+
+    //setCache("users.id=",req.params.userId,user)
+    res
+      .status(200)
+      .json({ success: true, data: post.poll_user_responses, msg: "Success" });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getPoll = async (req, res, next) => {
+
+  try {   
+
+    const post = await News.findById(req.params.postId)
+
+    if (!post) {
+      return res.status(401).json({
+        success: false,
+        msg: "Post Not found.",
+      });
+    }
+
+
+    //setCache("users.id=",req.params.userId,user)
+    res
+      .status(200)
+      .json({ success: true, data: post.poll_user_responses, msg: "Success" });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+exports.remPoll = async (req, res, next) => {
+
+  try {
+
+    const post = await News.findById(req.body.postId)
+
+    if (!post) {
+      return res.status(401).json({
+        success: false,
+        msg: "Post Not found.",
+      });
+    }
+    
+    post.poll_user_responses.splice(post.poll_user_responses.findIndex(e => e.userId === req.body.userId),1);
+    post.save()
+
+    //setCache("users.id=",req.params.userId,user)
+    res
+      .status(200)
+      .json({ success: true, data: post.poll_user_responses, msg: "Success" });
+
+  } catch (err) {
+    next(err);
+  }
 };

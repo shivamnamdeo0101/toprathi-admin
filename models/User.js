@@ -22,6 +22,13 @@ const UserSchema = new mongoose.Schema({
         type: String,
     }
   }],
+  
+  post_collections: [ {
+    postId: {
+        type: String,
+    }
+  }],
+
   education:{
     type: mongoose.SchemaTypes.Mixed,
   },

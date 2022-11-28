@@ -19,10 +19,10 @@ const NewsSchema = new mongoose.Schema({
         type:String
     },
     poll_user_responses:[ {
-        response: {
+        msg: {
             type: String,
         },
-        user_id: {
+        userId: {
             type: String,
         }
     }],

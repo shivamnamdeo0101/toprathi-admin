@@ -18,6 +18,7 @@ function DashboardComp() {
             setList(items.data)
             setcount(items.count)
             
+            console.log(items)
             setloading(false);
         })
         
