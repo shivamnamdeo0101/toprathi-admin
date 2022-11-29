@@ -155,6 +155,74 @@ exports.getCollectionToUser = async (req, res, next) => {
 };
 
 
+exports.getProfileCollection = async (req, res, next) => {
+
+  try {
+
+    const user = await User.findById(req.params.userId)
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        msg: "User Not found.",
+      });
+    }
+        
+    res.status(200)
+      .json({ success: true, data: user.post_collections, msg: "Success"});
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateProfileImg = async (req, res, next) => {
+
+  try {
+
+    const user = await User.findById(req.body.userId)
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        msg: "User Not found.",
+      });
+    }
+
+    user.profile_img = req.body.profile_img
+    user.save();
+    res.status(200)
+      .json({ success: true, data: user, msg: "Success"});
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getProfileImg = async (req, res, next) => {
+
+  try {
+
+    const user = await User.findById(req.params.userId)
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        msg: "User Not found.",
+      });
+    }
+
+
+    res.status(200)
+      .json({ success: true, data: user.profile_img, msg: "Success"});
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+
 
 exports.notify = async (req, res, next) => {
 

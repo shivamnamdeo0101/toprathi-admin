@@ -22,6 +22,9 @@ const UserSchema = new mongoose.Schema({
         type: String,
     }
   }],
+  profile_img:{
+    type:String,
+  },
   
   post_collections: [ {
     postId: {
