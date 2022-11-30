@@ -5,7 +5,7 @@ const {setCache,getCache,clearCache } = require("../middleware/redisCache")
 
 // @desc    ADd news
 exports.addNews = async (req, res, next) => {
-  const { title, content, image, timestamp, author, views, tags, addAt, updatedAt ,read_more_link,form_link,news_type,poll_title,poll_user_responses} = req.body;
+  const { title, content, image, timestamp, author, views, tags, addAt, updatedAt ,read_more_link,form_link,news_type,poll_title,poll_user_responses,insight_arr} = req.body;
 
   try {
 
@@ -14,7 +14,7 @@ exports.addNews = async (req, res, next) => {
 
 
     const news = await News.create({
-      title, content, image, timestamp, author, views, tags, addAt, updatedAt,read_more_link,form_link,news_type,poll_title,poll_user_responses
+      title, content, image, timestamp, author, views, tags, addAt, updatedAt,read_more_link,form_link,news_type,poll_title,poll_user_responses,insight_arr
     });
     res.status(201).json({
       success: true,
@@ -197,7 +197,7 @@ exports.getNews = async (req, res, next) => {
   query.skip = size * (pageNo - 1);
   query.limit = size;
 
-   let result = await News.find()
+   let result = await News.find({ news_type: { $regex: 'feed' } })
     .sort({ 'timestamp': 'desc' })
     .populate({ path: "addAt", select: ["_id"] })
     .sort("-_id")
@@ -218,9 +218,10 @@ exports.getNews = async (req, res, next) => {
 
 exports.getNewsAdmin = async (req, res, next) => {
 
-  var size = req.params.perPage;
-  var pageNo = req.params.page; // parseInt(req.query.pageNo)
 
+  var pageNo = req.params.page; // parseInt(req.query.pageNo)
+  var size = req.params.perPage;
+  
   let news_key = "news"+pageNo+""+size;
   let news = await getCache("news_array.id=",news_key)
   let total_news_count = await getCache("news_array.id=","total_news")

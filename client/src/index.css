@@ -159,12 +159,11 @@ body {
 
 .dashboard_comp{
   background-color: var(--white);
-  height: 85vh;
+  height: fit-content;
   width: 100%;
   border-radius: 1rem;
   margin: 1rem;
-  padding-top: 1rem;
-  padding-left: 1rem;
+  padding:1rem;
   margin-bottom: 10px;
 }
 
@@ -218,6 +217,7 @@ body {
 .post_form_comp>input{
   padding: 10px 12px;
   font-size: 1rem;
+  margin-bottom: 5px;
 }
 
 .post_form_comp>select{
@@ -249,4 +249,22 @@ body {
 /***********multiinput*******/
 .multiinput{
   width: 80%;
+}
+
+.dynamic_button{
+  color: #2e81f5;
+  font-size: 16px;
+  margin-top: 10px;
+  width: fit-content;
+}
+.flex_row{
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+}
+.flex_row>button{
+  margin-left: 10px;
+}
+.flex_row>p{
+  margin-right: 5px;
 }

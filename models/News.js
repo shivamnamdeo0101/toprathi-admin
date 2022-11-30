@@ -14,6 +14,11 @@ const NewsSchema = new mongoose.Schema({
     news_type:{
         type: String
     },
+    insight_arr:[ {
+        image: {
+            type: String,
+        },        
+    }],
 
     poll_title:{
         type:String

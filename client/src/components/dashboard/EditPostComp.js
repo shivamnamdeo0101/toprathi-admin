@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { useHistory, useParams } from 'react-router-dom';
 import NewsService from '../../service/api/NewsService';
 import Select from 'react-select';
@@ -29,8 +29,23 @@ function EditPostComp() {
     }, [newsId])
 
 
-    const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm(
-    );
+   
+    const { control, register, handleSubmit, reset, getValues, setValue, watch, formState: { errors } } = useForm({
+        defaultValues:news_data,
+        test: news_data?.insight_arr
+    }
+        );
+    
+        const { fields, append, remove } = useFieldArray({
+            control,
+            name: "test",
+        });
+        
+        useEffect(() => {
+            reset({
+              test:news_data?.insight_arr
+            });
+          }, [news_data]);
 
     useEffect(() => {
         reset(news_data);
@@ -46,14 +61,15 @@ function EditPostComp() {
             "read_more_link":data.read_more_link,
             "timestamp": Date.now(),
             "author": "shivam",
-            "image": image ? image : "https://yaffa-cdn.s3.amazonaws.com/yaffadsp/images/dmImage/SourceImage/news-corp-359.jpg",
+            "image": data?.image ? data?.image : "https://yaffa-cdn.s3.amazonaws.com/yaffadsp/images/dmImage/SourceImage/news-corp-359.jpg",
             "views": 1,
             "tags":tags,
             "addAt": Date.now(),
             "updatedAt": Date.now(),
             "poll_user_responses":[],
             "poll_title":data.poll_title,
-            "news_type":data.news_type
+            "news_type":data.news_type,
+            "insight_arr": fields
         }
         EditNewsFun(res)
         //console.log(res)
@@ -63,12 +79,15 @@ function EditPostComp() {
 
 
     const EditNewsFun = async (data) => {
-        if (!image) { alert("Please attach image...") }
+        // if (!image) { alert("Please attach image...") }
 
-        if (image) {
-            const res = await newsEdit(data, newsId);
-            console.log(res,"RES");
-        }
+        // if (image) {
+        //     const res = await newsEdit(data);
+        //     console.log(res, "RES");
+        // }
+
+        const res = await newsEdit(data);
+             console.log(res, "RES");
     }
     function encodeImageFileAsURL(file) {
 
@@ -95,6 +114,14 @@ function EditPostComp() {
         })
         .catch(err => console.log(err))
     }
+
+    useEffect(() => {
+        const subscription = watch((value, { name, type }) => console.log(value, name, type));
+        return () => subscription.unsubscribe();
+    }, [watch]);
+    const watchAllFields = watch();
+
+
 
     return (
         <div className='add_post_form'>
@@ -135,6 +162,34 @@ function EditPostComp() {
                         {errors.news_type && <span className='error'>News Type field is required</span>}
 
                     </div>
+                    {watchAllFields.news_type === "insight" && <div className='post_form_comp'>
+                        <label>Insight Images Link </label>
+                        <ul>
+                            {fields.map((item, index) => (
+                                <li key={item.id} className='post_form_comp flex_row'>
+                                    <p>{index+1}  </p>
+                                    <Controller
+                                        render={({ field }) => <input {...field}  />}
+                                        name={`test.${index}.image`}
+                                        control={control}
+                                        defaultValue={news_data?.insight_arr[index]?.image}
+                                    />
+                                    <button  className='dynamic_button' type="button" onClick={() => remove(index)}>Delete</button>
+                                </li>
+                            ))}
+                            <button
+                                className='dynamic_button'
+                                type="button"
+                                onClick={() => append({ image: "" })}
+                            >
+                                Add 
+                            </button>
+                        </ul>
+
+
+                        {errors.news_type && <span className='error'>News Type field is required</span>}
+
+                    </div>}
                     <div className='post_form_comp'>
                         <label>Poll Title ( IF THIS IS FOR POLL)</label>
                         <input {...register("poll_title", { required: false })} />
@@ -145,12 +200,13 @@ function EditPostComp() {
 
                     <div className='post_form_comp'>
                         <label>Image</label>
-                        <div className='dashboard_articles_comp_center articles_comp'>
+                        {/* <div className='dashboard_articles_comp_center articles_comp'>
                             <img src={image} />
                         </div>
 
-                        <input type="file" accept="image/jpeg, image/png" onChange={(e) => uploadImage(e.target.files[0])} />
-
+                        <input type="file" accept="image/jpeg, image/png" onChange={(e) => encodeImageFileAsURL(e.target.files[0])} /> */}
+                        <input {...register("image", { required: false })} />
+                        {errors.image && <span className='error'>image Link field is required</span>}
 
                     </div>
                     <div className='post_form_comp'>

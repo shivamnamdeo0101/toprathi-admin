@@ -228,7 +228,7 @@ exports.notify = async (req, res, next) => {
 
   try {
     var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
-      to: 'fEKVD55FT2GOB7vNEBL1AG:APA91bEJT2p25UN2JIoTUU6DpoWdJyJ_WsI5JHZOPwxr2VxHVICBTL3ldzPlFPKyUHpXPvF0_jYTd73F_h0M9dKLjBrpa0Mm8hw2mhZtzFfp_zkIevPPUVlu-cOeBfjQriWwedaA7NFP',
+      to: 'faBEtqH9QgOe1Y0pFVLCPW:APA91bEj9CQ5k3S71izxKhe-fnQ4lhXVzLQuKmaMJGA4H9sBh-cgvq2QCVF8JLwa0HyOTx49uUWoHRKjxZjImv9D2vk6BiAiwsVAad89fgcoz97XKl9SSF5s5T63UiHAeeKUpjJoVv-C',
       collapse_key: 'com.toprathi',
 
       notification: {
