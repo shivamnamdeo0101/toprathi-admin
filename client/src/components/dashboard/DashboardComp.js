@@ -74,7 +74,7 @@ function DashboardComp() {
                                 <img src={item.image}/>
                             </div>
                             <div className='articles_content articles_comp'>
-                                <h5>{item.title}</h5>
+                                <h5>{item?.title.length > 50 ? item?.title?.substring(0,50) : item?.title}</h5>
                                 <h5>{item?.content.length > 50 ? item?.content?.substring(0,50) : item?.content}</h5>
                                 <p>{moment(item.timestamp).fromNow()}</p>
                             </div>

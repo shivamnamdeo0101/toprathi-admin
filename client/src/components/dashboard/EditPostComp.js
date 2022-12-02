@@ -10,6 +10,8 @@ function EditPostComp() {
     const { newsId } = useParams();
     const [image, setimage] = useState("");
 
+    const [temp_image_link, settemp_image_link] = useState("");
+
     const [options, setoptions] = useState([{ value: 'chocolate', label: 'Chocolate' },
     { value: 'strawberry', label: 'Strawberry' },
     { value: 'vanilla', label: 'Vanilla' },])
@@ -20,7 +22,6 @@ function EditPostComp() {
     useEffect(() => {
         newsGetById(newsId)
             .then(item => {
-                console.log(item)
                 setnews_data(item.data);
                 settags(item.data.tags)
                 setimage(item.data.image)
@@ -32,18 +33,18 @@ function EditPostComp() {
    
     const { control, register, handleSubmit, reset, getValues, setValue, watch, formState: { errors } } = useForm({
         defaultValues:news_data,
-        test: news_data?.insight_arr
+        insight_arr: news_data?.insight_arr
     }
         );
     
         const { fields, append, remove } = useFieldArray({
             control,
-            name: "test",
+            name: "insight_arr",
         });
         
         useEffect(() => {
             reset({
-              test:news_data?.insight_arr
+              insight_arr:news_data?.insight_arr
             });
           }, [news_data]);
 
@@ -54,6 +55,7 @@ function EditPostComp() {
 
     const onSubmit = data => {
 
+        console.log(data,"------")
         const res = {
             "title": data.title,
             "content": data.content,
@@ -74,7 +76,7 @@ function EditPostComp() {
         EditNewsFun(res)
         //console.log(res)
         reset()
-        history.push("/")
+        
     };
 
 
@@ -86,8 +88,11 @@ function EditPostComp() {
         //     console.log(res, "RES");
         // }
 
-        const res = await newsEdit(data);
+        // console.log(data,"->>>>>>>>")
+
+        const res = await newsEdit(data,newsId);
              console.log(res, "RES");
+             history.push("/")
     }
     function encodeImageFileAsURL(file) {
 
@@ -162,25 +167,21 @@ function EditPostComp() {
                         {errors.news_type && <span className='error'>News Type field is required</span>}
 
                     </div>
-                    {watchAllFields.news_type === "insight" && <div className='post_form_comp'>
+                     {watchAllFields.news_type === "insight" && <div className='post_form_comp'>
                         <label>Insight Images Link </label>
+                        <input type="text" onChange={(e)=>settemp_image_link(e.target.value)} value={temp_image_link} placeholder='Image Link'/>
                         <ul>
                             {fields.map((item, index) => (
                                 <li key={item.id} className='post_form_comp flex_row'>
                                     <p>{index+1}  </p>
-                                    <Controller
-                                        render={({ field }) => <input {...field}  />}
-                                        name={`test.${index}.image`}
-                                        control={control}
-                                        defaultValue={news_data?.insight_arr[index]?.image}
-                                    />
+                                    <img src={fields[index].image} style={{width:100,height:100,marginBottom:5}}/>
                                     <button  className='dynamic_button' type="button" onClick={() => remove(index)}>Delete</button>
                                 </li>
                             ))}
                             <button
                                 className='dynamic_button'
                                 type="button"
-                                onClick={() => append({ image: "" })}
+                                onClick={() => {append({ image: temp_image_link });settemp_image_link("")}}
                             >
                                 Add 
                             </button>

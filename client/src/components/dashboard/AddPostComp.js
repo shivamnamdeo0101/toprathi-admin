@@ -24,9 +24,11 @@ function AddPostComp() {
     const { control, register, handleSubmit, reset, getValues, setValue, watch, formState: { errors } } = useForm(
     );
 
+    const [temp_image_link, settemp_image_link] = useState("")
+
     const { fields, append, remove } = useFieldArray({
         control,
-        name: "test"
+        name: "insight_arr"
     });
 
 
@@ -100,7 +102,11 @@ function AddPostComp() {
     }, [watch]);
     const watchAllFields = watch();
 
+    const myStyle={
 
+        width:'20%',
+        height:'200px',
+    };
     return (
         <div className='add_post_form'>
             <div className='add_post_form_head'>
@@ -143,23 +149,19 @@ function AddPostComp() {
                     </div>
                     {watchAllFields.news_type === "insight" && <div className='post_form_comp'>
                         <label>Insight Images Link </label>
+                        <input type="text" onChange={(e)=>settemp_image_link(e.target.value)} value={temp_image_link} placeholder='Image Link'/>
                         <ul>
                             {fields.map((item, index) => (
                                 <li key={item.id} className='post_form_comp flex_row'>
                                     <p>{index+1}  </p>
-                                    <Controller
-                                        render={({ field }) => <input {...field} />}
-                                        name={`test.${index}.image`}
-                                        control={control}
-                                        value={`test.${index}.image`}
-                                    />
+                                    <img src={fields[index].image} style={{width:100,height:100,marginBottom:5}}/>
                                     <button  className='dynamic_button' type="button" onClick={() => remove(index)}>Delete</button>
                                 </li>
                             ))}
                             <button
                                 className='dynamic_button'
                                 type="button"
-                                onClick={() => append({ image: "" })}
+                                onClick={() => {append({_id:Date.now()+"image", image: temp_image_link });settemp_image_link("")}}
                             >
                                 Add 
                             </button>

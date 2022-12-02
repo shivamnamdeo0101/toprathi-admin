@@ -233,6 +233,8 @@ exports.getNewsAdmin = async (req, res, next) => {
       data: news,
     });
   }
+  
+
 
   var query = {};
   if (pageNo < 0 || pageNo === 0) {

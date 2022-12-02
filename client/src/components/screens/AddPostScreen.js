@@ -26,7 +26,7 @@ const AddPostScreen = ({history}) => {
     <div className="dashboard_page">
         <HeaderComp />
         <div className="dashboard_flex_row">
-            <LeftSideBar />
+            <LeftSideBar/>
             
             <div className='dashboard_comp'>
                 <AddPostComp />
