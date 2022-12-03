@@ -27,7 +27,14 @@ exports.login = async (req, res, next) => {
       return next(new ErrorResponse("Invalid credentials", 401));
     }
 
+    if(!user.emailVerified){
+      return next(new ErrorResponse("Verify your email to login", 401));
+    }
+
     sendToken(user, 200, res);
+
+
+    
   } catch (err) {
     next(err);
   }
@@ -223,8 +230,17 @@ exports.emailVerify = async (req, res, next) => {
       emailVerifyExpire: { $gt: Date.now() },
     });
 
+   
     if (!user) {
-      return next(new ErrorResponse("Invalid Token", 400));
+      return next(new ErrorResponse("Invalid Token ... resend the link to verify", 400));
+    }
+
+    if(user && user.emailVerified){
+      return  res.status(201).json({
+        success: true,
+        data: "Email Verified Already",
+        emailVerify: user.emailVerify,
+      });
     }
 
     user.emailVerified = true;
@@ -236,11 +252,9 @@ exports.emailVerify = async (req, res, next) => {
     res.status(201).json({
       success: true,
       data: "Email Verified Successfully",
-      token: user.getSignedJwtToken(),
+      emailVerify: user.emailVerify,
     });
   } catch (err) {
     next(err);
   }
 };
-
-

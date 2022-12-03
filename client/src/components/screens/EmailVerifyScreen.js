@@ -20,14 +20,12 @@ const EmailVerifyScreen = ({ history, match }) => {
     const verify = async (e) => {
         e.preventDefault();
 
-
-
         try {
-            const res = await userEmailVerify(emailToken)
-            if (res.data.success) {
-                setSuccess("Email verified")
+            const res = await userEmailVerify(emailToken)            
+            if (res.success) {
+                setSuccess(res.data)
+                window.alert(res.data)
             } else {
-
                 setError(res.data.error)
             }
 
@@ -48,14 +46,14 @@ const EmailVerifyScreen = ({ history, match }) => {
                 <h3 className="resetpassword-screen__title">Email Verification</h3>
                 {success && (
                     <p className="success-message">
-                        {success} <Link to="/login">Login</Link>
+                        {success} 
                     </p>
                 )}
                 {(Error && !success) && <p className="error-message"> {Error} </p>}
                 
-                <button type="submit" onClick={verify} className="btn btn-primary">
+               {(!Error || !success) && <button type="submit" onClick={verify} className="btn btn-primary">
                     Click Here to verify
-                </button>
+                </button>}
             </div>
         </div>
     );
