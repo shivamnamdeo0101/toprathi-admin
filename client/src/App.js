@@ -14,6 +14,7 @@ import AddSliderScreen from "./components/screens/AddSliderScreen";
 import EditPostScreen from "./components/screens/EditPostScreen";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+import EmailVerifyScreen from "./components/screens/EmailVerifyScreen";
 
 
 
@@ -63,6 +64,11 @@ const App = () => {
             exact
             path="/passwordreset/:resetToken"
             component={ResetPasswordScreen}
+          />
+           <Route
+            exact
+            path="/email-verify/:emailToken"
+            component={EmailVerifyScreen}
           />
       </div>
     </Router>

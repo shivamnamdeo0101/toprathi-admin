@@ -67,12 +67,11 @@ exports.forgotPassword = async (req, res, next) => {
 
     // Reset Token Gen and add to database hashed (private) version of token
     const resetToken = user.getResetPasswordToken();
-
+    
     await user.save();
 
     // Create reset url to email to provided email
-    const resetUrl = resetToken.slice(-4);
-
+    const resetUrl = `http://localhost:3000/passwordreset/${resetToken}`;
     // HTML Message
     const message = `
       <h1>You have requested a password reset</h1>
@@ -125,7 +124,6 @@ exports.resetPassword = async (req, res, next) => {
       return next(new ErrorResponse("Invalid Token", 400));
     }
 
-    
     user.password = req.body.password;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
@@ -156,3 +154,93 @@ const sendToken = (user, statusCode, res) => {
 
   res.status(statusCode).json({ sucess: true, data:data });
 };
+
+
+// @desc    Forgot Password Initialization
+exports.sendEmailVerification = async (req, res, next) => {
+  // Send Email to email provided but first check if user exists
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return next(new ErrorResponse("No email could not be sent", 404));
+    }
+
+    // Reset Token Gen and add to database hashed (private) version of token
+    const emailToken = user.getEmailVerifyToken();
+    
+    await user.save();
+
+    // Create reset url to email to provided email
+    const emailUrl = `http://localhost:3000/email-verify/${emailToken}`;
+    // HTML Message
+    const message = `
+      <h1>You have requested a email verification</h1>
+      <p>Click here to verify your email: ${emailUrl}</p>
+    `;
+    // const message = `
+    //   <h1>You have requested a password reset</h1>
+    //   <p>OTP for password reset:</p>
+    //   <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
+    // `;
+
+    try {
+      await sendEmail({
+        to: user.email,
+        subject: "Email Verification Request",
+        text: message,
+      });
+
+      res.status(200).json({ success: true, data: "Email Sent" });
+    } catch (err) {
+      console.log(err);
+
+      user.emailVerifyToken = undefined;
+      user.emailVerifyExpire = undefined;
+
+      await user.save();
+
+      return next(new ErrorResponse("Email could not be sent", 500));
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Reset User Password
+exports.emailVerify = async (req, res, next) => {
+  // Compare token in URL params to hashed token
+  const emailVerifyToken = crypto
+    .createHash("sha256")
+    .update(req.params.emailToken)
+    .digest("hex");
+
+  try {
+    const user = await User.findOne({
+      emailVerifyToken,
+      emailVerifyExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return next(new ErrorResponse("Invalid Token", 400));
+    }
+
+    user.emailVerified = true;
+    user.emailVerifyToken = undefined;
+    user.emailVerifyExpire = undefined;
+
+    await user.save();
+
+    res.status(201).json({
+      success: true,
+      data: "Email Verified Successfully",
+      token: user.getSignedJwtToken(),
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
