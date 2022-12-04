@@ -24,6 +24,7 @@ const UserSchema = new mongoose.Schema({
   }],
   profile_img:{
     type:String,
+    default:"https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg"
   },
   
   post_collections: [ {
@@ -97,7 +98,7 @@ UserSchema.methods.getEmailVerifyToken = function () {
     .digest("hex");
 
   // Set token expire date
-  this.emailVerifyExpire = Date.now() + 10 * (60 * 1000); // Ten Minutes
+  this.emailVerifyExpire = Date.now() + 1  * (60 * 1000) ; // 1 Min
 
   return emailToken;
 };

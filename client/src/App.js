@@ -71,6 +71,7 @@ const App = () => {
             component={EmailVerifyScreen}
           />
       </div>
+      
     </Router>
   );
 };

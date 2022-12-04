@@ -89,6 +89,7 @@ exports.getInsight = async (req, res, next) => {
 exports.editNews = async (req, res, next) => {
   let news_key = "news"+1+""+5;
   await clearCache("news_array.id="+news_key)
+  
   let news = await News.findById(req.params.newsId);
 
   if (!news) {

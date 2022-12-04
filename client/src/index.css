@@ -99,6 +99,7 @@ body {
 
 .dashboard_page{
   height: 100vh;
+  
 }
 
 /********Header comp *******/
@@ -159,12 +160,16 @@ body {
 
 .dashboard_comp{
   background-color: var(--white);
-  height: fit-content;
+  height:85vh;
+  max-height: fit-content;
+  overflow-y: scroll;
+
   width: 100%;
   border-radius: 1rem;
   margin: 1rem;
   padding:1rem;
   margin-bottom: 10px;
+  
 }
 
 .articles_comp_first{
@@ -192,8 +197,8 @@ body {
   margin-left: 10px;
 }
 .dashboard_articles{
-  overflow-y: scroll;
-  max-height: 78vh;
+  max-height: 80vh;
+
 }
 
 .dashboard_articles_comp_center>img{
@@ -256,6 +261,7 @@ body {
   font-size: 16px;
   margin-top: 10px;
   width: fit-content;
+
 }
 .flex_row{
   display:flex;
