@@ -22,10 +22,12 @@ exports.updateUser = async (req, res, next) => {
     //   username: user_data.username,
     //   education: user_data.education
     // });
+    
 
     const user = await User.findById(req.params.userId)
-    user.education = user_data.education,
+      user.education = user_data.education,
       user.interest = user_data.interest,
+      user.address = user_data.address,
       user.post_collections = user_data.post_collections
     user.save()
     res.status(200).json({
@@ -35,7 +37,25 @@ exports.updateUser = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};
+};  
+
+
+exports.updateNotifyToken= async (req, res, next) => {
+
+  try {
+    
+    const user = await User.findById(req.body.userId)
+    user.notifyToken = req.body.notifyToken 
+
+    user.save()
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (err) {
+    next(err);
+  }
+};  
 
 
 exports.getUserById = async (req, res, next) => {
@@ -77,7 +97,7 @@ exports.saveCollectionToUser = async (req, res, next) => {
 
   try {
 
-   
+
     const user = await User.findById(req.body.userId)
     const post = await News.findById(req.body.postId)
 
@@ -89,7 +109,7 @@ exports.saveCollectionToUser = async (req, res, next) => {
     }
 
 
-    user.post_collections.push({"postId":req.body.postId})
+    user.post_collections.push({ "postId": req.body.postId })
     user.save()
 
     //setCache("users.id=",req.params.userId,user)
@@ -114,8 +134,8 @@ exports.remCollectionToUser = async (req, res, next) => {
         msg: "Not found.",
       });
     }
-    
-    user.post_collections.splice(user.post_collections.findIndex(e => e.postId === req.body.postId),1);
+
+    user.post_collections.splice(user.post_collections.findIndex(e => e.postId === req.body.postId), 1);
     user.save()
 
     //setCache("users.id=",req.params.userId,user)
@@ -145,9 +165,9 @@ exports.getCollectionToUser = async (req, res, next) => {
     const check = obj => obj.postId === req.params.postId;
 
     const result = user.post_collections.some(check)
-        
+
     res.status(200)
-      .json({ success: true, data: result, msg: "Success"});
+      .json({ success: true, data: result, msg: "Success" });
 
   } catch (err) {
     next(err);
@@ -167,9 +187,9 @@ exports.getProfileCollection = async (req, res, next) => {
         msg: "User Not found.",
       });
     }
-        
+
     res.status(200)
-      .json({ success: true, data: user.post_collections, msg: "Success"});
+      .json({ success: true, data: user.post_collections, msg: "Success" });
 
   } catch (err) {
     next(err);
@@ -192,7 +212,7 @@ exports.updateProfileImg = async (req, res, next) => {
     user.profile_img = req.body.profile_img
     user.save();
     res.status(200)
-      .json({ success: true, data: user, msg: "Success"});
+      .json({ success: true, data: user, msg: "Success" });
 
   } catch (err) {
     next(err);
@@ -212,10 +232,10 @@ exports.getProfileImg = async (req, res, next) => {
       });
     }
 
-    
+
 
     res.status(200)
-      .json({ success: true, data: user.profile_img, msg: "Success"});
+      .json({ success: true, data: user.profile_img, msg: "Success" });
 
   } catch (err) {
     next(err);
@@ -229,16 +249,16 @@ exports.notify = async (req, res, next) => {
 
   try {
     var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
-      to: 'faBEtqH9QgOe1Y0pFVLCPW:APA91bEj9CQ5k3S71izxKhe-fnQ4lhXVzLQuKmaMJGA4H9sBh-cgvq2QCVF8JLwa0HyOTx49uUWoHRKjxZjImv9D2vk6BiAiwsVAad89fgcoz97XKl9SSF5s5T63UiHAeeKUpjJoVv-C',
+      to: 'dke7iUq0Q6yLIk6IunC8Bg:APA91bGBry19O1Mt1Y2T-wD6q4kq_q2M9pM9x5KorYnMZ98SJJFoEUtbcuicQZAHC-Pj1q3siXc9XCR3czA0vfRPD_A6O7YEdR9_U3Z2DHtsKWBXnSgb6WzfVkYNq-YeEs6y_jfdfWvK',
       collapse_key: 'com.toprathi',
 
       notification: {
-        title: 'Title of your push notification',
-        body: 'Body of your push notification',
-        android:{
+        title: req.body.title,
+        body: req.body.body,
+        android: {
           imageUrl: 'https://www.pixel4k.com/wp-content/uploads/2020/01/photographer-girl-painting_1578254993.jpg'
         }
-        
+
       },
 
       data: {  //you can send only notification or only data(or include both)
@@ -250,12 +270,12 @@ exports.notify = async (req, res, next) => {
     fcm.send(message, function (err, response) {
       if (response) {
         res
-        .status(200)
-        .json({ success: true, data: response, msg: "Success" });
+          .status(200)
+          .json({ success: true, data: response, msg: "Success" });
       } else {
         res
-        .status(400)
-        .json({ success: false, data: err, msg: "Failure" });
+          .status(400)
+          .json({ success: false, data: err, msg: "Failure" });
       }
     });
 

@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { type } = require("os");
 
 const UserSchema = new mongoose.Schema({
   username: {
@@ -32,9 +33,23 @@ const UserSchema = new mongoose.Schema({
         type: String,
     }
   }],
-
+  
   education:{
     type: mongoose.SchemaTypes.Mixed,
+  },
+  address:{
+    country: {
+      type: String,
+    },
+    state: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    pincode: {
+      type: Number,
+    }
   },
   password: {
     type: String,
@@ -45,6 +60,10 @@ const UserSchema = new mongoose.Schema({
   emailVerified:{
     type: Boolean,
     default: false
+  },
+  notifyToken:{
+    type: String,
+    default: ""
   },
   resetPasswordToken: String,
   resetPasswordExpire: Date,

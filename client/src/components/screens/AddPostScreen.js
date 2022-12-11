@@ -10,6 +10,7 @@ import AddPostComp from "../dashboard/AddPostComp";
 
 
 const AddPostScreen = ({history}) => {
+  
   const [error, setError] = useState("");
   const [privateData, setPrivateData] = useState("");
   const dispatch = useDispatch();
