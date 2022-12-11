@@ -79,7 +79,7 @@ exports.forgotPassword = async (req, res, next) => {
     await user.save();
 
     // Create reset url to email to provided email
-    const resetUrl = `http://localhost:3000/passwordreset/${resetToken}`;
+    const resetUrl = `https://toprathi-9ce5d.web.app/passwordreset/${resetToken}`;
     // HTML Message
     const message = `
       <h1>You have requested a password reset</h1>
@@ -182,7 +182,7 @@ exports.sendEmailVerification = async (req, res, next) => {
     await user.save();
 
     // Create reset url to email to provided email
-    const emailUrl = `http://localhost:3000/email-verify/${emailToken}`;
+    const emailUrl = `https://toprathi-9ce5d.web.app/email-verify/${emailToken}`;
     // HTML Message
     const message = `
       <h1>You have requested a email verification</h1>
