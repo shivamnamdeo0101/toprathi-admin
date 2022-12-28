@@ -4,7 +4,7 @@ const expirationTime = process.env.REDIS_CACHE_EXPIRATIME_TIME; //second
 async function  set(key, data) {
     await client.setex(key,expirationTime, data);
 }
-async function  get  (key) {
+async function  get (key) {
     return await client.get(key);
 }
 async function  clearCache(key){

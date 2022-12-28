@@ -42,19 +42,9 @@ exports.login = async (req, res, next) => {
 
 // @desc    Register user
 exports.register = async (req, res, next) => {
-  const { username, email, password , education,interest,address
-  } = req.body;
-
+  
   try {
-    const user = await User.create({
-      username,
-      email,
-      password,
-      education,
-      interest,
-      address
-    });
-
+    const user = await User.create(req.body);
     sendToken(user, 200, res);
   } catch (err) {
     next(err);

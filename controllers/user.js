@@ -13,19 +13,16 @@ const News = require("../models/News");
 exports.updateUser = async (req, res, next) => {
   const { user_data } = req.body;
 
-
-  console.log(user_data)
-
   try {
     // const user = await User.findByIdAndUpdate(req.params.userId, {
     //   email: user_data.email,
     //   username: user_data.username,
     //   education: user_data.education
     // });
-    
+
 
     const user = await User.findById(req.params.userId)
-      user.education = user_data.education,
+    user.education = user_data.education,
       user.interest = user_data.interest,
       user.address = user_data.address,
       user.post_collections = user_data.post_collections
@@ -37,15 +34,34 @@ exports.updateUser = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};  
+};
 
 
-exports.updateNotifyToken= async (req, res, next) => {
+exports.setUserSuccessRegister = async (req, res, next) => {
+  const { isSuccess } = req.body;
 
   try {
-    
+
+    const user = await User.findById(req.params.userId)
+   user.isSuccess = isSuccess;
+    user.save()
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+
+exports.updateNotifyToken = async (req, res, next) => {
+
+  try {
+
     const user = await User.findById(req.body.userId)
-    user.notifyToken = req.body.notifyToken 
+    user.notifyToken = req.body.notifyToken
 
     user.save()
     res.status(200).json({
@@ -55,7 +71,7 @@ exports.updateNotifyToken= async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};  
+};
 
 
 exports.getUserById = async (req, res, next) => {

@@ -5,7 +5,7 @@ const { addNews,getNews,addSlide,getSlide,editNews,getNewsById,remNewsById,getSl
 
 const {getNewsCache} = require("../middleware/redisCache");
 
-const {updateUser,getUserById, saveCollectionToUser, notify, remCollectionToUser, getCollectionToUser, getProfileCollection, updateProfileImg, getProfileImg, updateNotifyToken} = require("../controllers/user")
+const {updateUser,getUserById, saveCollectionToUser, notify, remCollectionToUser, getCollectionToUser, getProfileCollection, updateProfileImg, getProfileImg, updateNotifyToken, setUserSuccessRegister} = require("../controllers/user")
 const { protect } = require("../middleware/auth");
 const { sendPushNotification } = require("../utils/sendPushNotification");
 
@@ -14,9 +14,6 @@ router.route("/news").post(protect,addNews);
 
 
 router.route("/news/:newsId").get(protect,getNewsById);
-
-
-
 
 
 router.route("/news/:newsId").delete(protect,remNewsById);
@@ -46,24 +43,16 @@ router.route("/collection/:userId/:postId").get(getCollectionToUser);
 router.route("/collection/:userId").get(getProfileCollection);
 
 
-
-
-
-
-
-
 router.route("/poll").post(addPoll);
 router.route("/poll/:postId").get(getPoll);
 router.route("/poll").delete(remPoll);
-
-
-
 
 
 router.route("/notify-token-update").put(updateNotifyToken);
 router.route("/notify").post(notify);
 
 
+router.route("/success/:userId").put(setUserSuccessRegister);
 
 
 router.route("/user/:userId").put(updateUser);
@@ -75,3 +64,4 @@ router.route("/profile-img/:userId").get(getProfileImg);
 
 
 module.exports = router;
+

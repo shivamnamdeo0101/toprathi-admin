@@ -1,7 +1,7 @@
 {
   "name": "client",
   "version": "0.1.0",
-  "proxy": "http://20.237.28.177:5000",
+  "proxy": "http://localhost:5000",
   "private": true,
   "engines": {
     "node": "16.15.1 ",

@@ -65,6 +65,17 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: ""
   },
+
+  isSuccess:{
+    type: Boolean,
+    default: false
+  },
+  
+  joinedOn:{
+    type: String,
+    default: Date.now()
+  },
+
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   emailVerifyToken:String,
