@@ -2,6 +2,9 @@ const crypto = require("crypto");
 const ErrorResponse = require("../utils/errorResponse");
 const User = require("../models/User");
 const sendEmail = require("../utils/sendEmail");
+const ejs = require('ejs');
+const path = require("path");
+
 
 // @desc    Login user
 exports.login = async (req, res, next) => {
@@ -57,24 +60,29 @@ exports.forgotPassword = async (req, res, next) => {
   const { email } = req.body;
 
   try {
+
+
     const user = await User.findOne({ email });
 
     if (!user) {
       return next(new ErrorResponse("No email could not be sent", 404));
     }
 
+    
     // Reset Token Gen and add to database hashed (private) version of token
     const resetToken = user.getResetPasswordToken();
-    
     await user.save();
+
+    
 
     // Create reset url to email to provided email
     const resetUrl = `https://toprathi-9ce5d.web.app/passwordreset/${resetToken}`;
     // HTML Message
-    const message = `
-      <h1>You have requested a password reset</h1>
-      <p>OTP for password reset: ${resetUrl}</p>
-    `;
+    const requiredPath = path.join(__dirname, "../templates/forgotPass.ejs");
+    const data = await ejs.renderFile(requiredPath, {
+        link: resetUrl,
+    });
+
     // const message = `
     //   <h1>You have requested a password reset</h1>
     //   <p>OTP for password reset:</p>
@@ -85,7 +93,7 @@ exports.forgotPassword = async (req, res, next) => {
       await sendEmail({
         to: user.email,
         subject: "Password Reset Request",
-        text: message,
+        text: data,
       });
 
       res.status(200).json({ success: true, data: "Email Sent" });
@@ -174,10 +182,11 @@ exports.sendEmailVerification = async (req, res, next) => {
     // Create reset url to email to provided email
     const emailUrl = `https://toprathi-9ce5d.web.app/email-verify/${emailToken}`;
     // HTML Message
-    const message = `
-      <h1>You have requested a email verification</h1>
-      <p>Click here to verify your email: ${emailUrl}</p>
-    `;
+    const requiredPath = path.join(__dirname, "../templates/verifyEmail.ejs");
+    const data = await ejs.renderFile(requiredPath, {
+        link: emailUrl,
+    });
+
     // const message = `
     //   <h1>You have requested a password reset</h1>
     //   <p>OTP for password reset:</p>
@@ -188,7 +197,7 @@ exports.sendEmailVerification = async (req, res, next) => {
       await sendEmail({
         to: user.email,
         subject: "Email Verification Request",
-        text: message,
+        text: data,
       });
 
       res.status(200).json({ success: true, data: "Email Sent" });
