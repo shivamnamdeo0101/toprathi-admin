@@ -209,6 +209,10 @@ exports.sendEmailVerification = async (req, res, next) => {
 
 // @desc    Reset User Password
 exports.emailVerify = async (req, res, next) => {
+
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  
   // Compare token in URL params to hashed token
   const emailVerifyToken = crypto
     .createHash("sha256")
