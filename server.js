@@ -13,7 +13,7 @@ const path = require('path');
 connectDB();
 
 app.use(cors({
-  origin: ["http://localhost:3000", "https://toprathi-admin.onrender.com"]
+  origin: ["http://localhost:3000", "https://toprathi-admin.onrender.com","https://toprathi-9ce5d.web.app/"]
 }));
 app.use(express.json());
 
