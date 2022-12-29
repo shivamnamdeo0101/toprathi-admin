@@ -15,8 +15,9 @@ connectDB();
 app.use(cors({
   "origin": ['https://toprathi-admin.onrender.com','https://toprathi-9ce5d.web.app/'],
   "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+  "preflightContinue": false,
+  "optionsSuccessStatus": 204
 }));
-
 
 
 app.use(express.json());
