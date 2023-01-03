@@ -66,7 +66,13 @@ const UserSchema = new mongoose.Schema({
     default: ""
   },
 
+  
   isSuccess:{
+    type: Boolean,
+    default: false
+  },
+
+  isProfileDone:{
     type: Boolean,
     default: false
   },

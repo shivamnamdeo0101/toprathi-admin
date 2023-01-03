@@ -25,7 +25,8 @@ exports.updateUser = async (req, res, next) => {
     user.education = user_data.education,
       user.interest = user_data.interest,
       user.address = user_data.address,
-      user.post_collections = user_data.post_collections
+      user.post_collections = user_data.post_collections,
+      user.isProfileDone = user_data.isProfileDone
     user.save()
     res.status(200).json({
       success: true,
