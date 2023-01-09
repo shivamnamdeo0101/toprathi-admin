@@ -18,26 +18,45 @@ const UserSchema = new mongoose.Schema({
       "Please provide a valid email",
     ],
   },
-  interest: [ {
+  interest: [{
     name: {
-        type: String,
+      type: String,
     }
   }],
-  profile_img:{
-    type:String,
-    default:"https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg"
+  profile_img: {
+    type: String,
+    default: "https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small/user-profile-icon-free-vector.jpg"
   },
-  
-  post_collections: [ {
-    postId: {
-        type: String,
+
+
+  post_collections: [{
+    newsId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'News'
+    },
+    addAt:{
+      type:Number,
+      default:Date.now()
     }
   }],
-  
-  education:{
+  notifications: [{
+    notifyId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Notification'
+    },
+    readStatus: {
+        type: Boolean,
+        default: false
+      }
+    }
+
+  ],
+
+
+  education: {
     type: mongoose.SchemaTypes.Mixed,
   },
-  address:{
+  address: {
     country: {
       type: String,
     },
@@ -57,35 +76,36 @@ const UserSchema = new mongoose.Schema({
     minlength: 6,
     select: false,
   },
-  emailVerified:{
+  emailVerified: {
     type: Boolean,
     default: false
   },
-  notifyToken:{
+  notifyToken: {
     type: String,
     default: ""
   },
 
-  
-  isSuccess:{
+
+
+  isSuccess: {
     type: Boolean,
     default: false
   },
 
-  isProfileDone:{
+  isProfileDone: {
     type: Boolean,
     default: false
   },
-  
-  joinedOn:{
+
+  joinedOn: {
     type: String,
     default: Date.now()
   },
 
   resetPasswordToken: String,
   resetPasswordExpire: Date,
-  emailVerifyToken:String,
-  emailVerifyExpire:Date
+  emailVerifyToken: String,
+  emailVerifyExpire: Date
 });
 
 UserSchema.pre("save", async function (next) {
@@ -134,7 +154,7 @@ UserSchema.methods.getEmailVerifyToken = function () {
     .digest("hex");
 
   // Set token expire date
-  this.emailVerifyExpire = Date.now() + 1  * (60 * 1000) ; // 1 Min
+  this.emailVerifyExpire = Date.now() + 1 * (60 * 1000); // 1 Min
 
   return emailToken;
 };

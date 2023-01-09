@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const mongoose = require("mongoose");
 
 var FCM = require('fcm-node');
 var serverKey = 'AAAAYYjDA20:APA91bE3a67rglDk8tMgGGmc2ZV2B5YFBP20YuaTCqKBcp19lH8iili_JXWQxCy38euf_uAqPRTKSmOLWH5JyEOT08Fq3Sg0pAB7cKsZCf-yMosis6A8y6s4nS60mSS7qe0TWfDZhgD5'; //put your server key here
@@ -25,8 +26,10 @@ exports.updateUser = async (req, res, next) => {
     user.education = user_data.education,
       user.interest = user_data.interest,
       user.address = user_data.address,
-      user.post_collections = user_data.post_collections,
+      //user.post_collections = user_data.post_collections,
       user.isProfileDone = user_data.isProfileDone
+
+
     user.save()
     res.status(200).json({
       success: true,
@@ -36,15 +39,53 @@ exports.updateUser = async (req, res, next) => {
     next(err);
   }
 };
+
+
+
+exports.getUserNotifications = async (req, res, next) => {
+
+  try { 
+
+    
+    let id = mongoose.Types.ObjectId(req.params.userId);
+
+    const list = await User.aggregate([
+      { $match: { _id: id } },
+      {
+        $lookup: {
+          from: "notifications",
+          localField: "notifications.notifyId",
+          foreignField: "_id",
+          as: "notifications"
+        }
+
+        
+      },
+
+       { $unwind: { path: "$notifications" } },
+      { $project: {_id:0, notifyId: '$notifications._id',timestamp: '$notifications.timestamp',text: '$notifications.text',image: '$notifications.image',readStatus: { $first: '$notifications.readStatus' },}},
+      { $sort: { timestamp: 1 } }
+
+    ])
+    res.status(200).json({
+      success: true,
+      length:list.length,
+      data:list,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 
 
 exports.setUserSuccessRegister = async (req, res, next) => {
-  const { isSuccess } = req.body;
+  const { isSuccess,userId } = req.body;
 
   try {
 
-    const user = await User.findById(req.params.userId)
-   user.isSuccess = isSuccess;
+    const user = await User.findById(userId)
+    user.isSuccess = isSuccess;
     user.save()
     res.status(200).json({
       success: true,
@@ -54,7 +95,6 @@ exports.setUserSuccessRegister = async (req, res, next) => {
     next(err);
   }
 };
-
 
 
 exports.updateNotifyToken = async (req, res, next) => {
@@ -118,6 +158,12 @@ exports.saveCollectionToUser = async (req, res, next) => {
     const user = await User.findById(req.body.userId)
     const post = await News.findById(req.body.postId)
 
+    const newsPayload = {
+      "newsId":req.body.postId,
+      
+    }
+
+   
     if (!user || !post) {
       return res.status(401).json({
         success: false,
@@ -125,8 +171,7 @@ exports.saveCollectionToUser = async (req, res, next) => {
       });
     }
 
-
-    user.post_collections.push({ "postId": req.body.postId })
+    user.post_collections.push({ "newsId": req.body.postId,addAt:Date.now() })
     user.save()
 
     //setCache("users.id=",req.params.userId,user)
@@ -179,7 +224,9 @@ exports.getCollectionToUser = async (req, res, next) => {
       });
     }
 
-    const check = obj => obj.postId === req.params.postId;
+    const check = obj => {
+     console.log(obj)
+    };
 
     const result = user.post_collections.some(check)
 
@@ -194,11 +241,28 @@ exports.getCollectionToUser = async (req, res, next) => {
 
 exports.getProfileCollection = async (req, res, next) => {
 
+  let id = mongoose.Types.ObjectId(req.params.userId);
   try {
 
-    const user = await User.findById(req.params.userId)
+    const list = await User.aggregate([
+      { $match: { _id: id } },
+      {
+        $lookup: {
+          from: "news",
+          localField: "post_collections.newsId",
+          foreignField: "_id",
+          as: "news"
+        }
 
-    if (!user) {
+      },
+     
+      { $unwind: { path: "$news" } },
+      { $project: {_id:0, newsId: '$news._id',timestamp: '$news.timestamp',title: '$news.title',tags: '$news.tags', content: '$news.content',news_type:'$news.news_type' ,image: '$news.image',addAt: { $first: "$post_collections.addAt" }, }},
+     { $sort: { addAt: 1 } }
+
+    ])
+
+    if (!list) {
       return res.status(401).json({
         success: false,
         msg: "User Not found.",
@@ -206,7 +270,7 @@ exports.getProfileCollection = async (req, res, next) => {
     }
 
     res.status(200)
-      .json({ success: true, data: user.post_collections, msg: "Success" });
+      .json({ success: true, data: list, msg: "Success" });
 
   } catch (err) {
     next(err);

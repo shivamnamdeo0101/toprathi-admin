@@ -1,24 +1,38 @@
 const News = require("../models/News");
 const Slide = require("../models/Slide");
-const {setCache,getCache,clearCache } = require("../middleware/redisCache")
-
+const { setCache, getCache, clearCache } = require("../middleware/redisCache")
+const User = require("../models/User")
+const Notification = require("../models/Notification");
+const { findOne } = require("../models/News");
 
 // @desc    ADd news
 exports.addNews = async (req, res, next) => {
-  const { title, content, image, timestamp, author, views, tags, addAt, updatedAt ,read_more_link,form_link,news_type,poll_title,poll_user_responses,insight_arr} = req.body;
+  const { title, content, image, timestamp, author, views, tags, addAt, updatedAt, read_more_link, form_link, news_type, poll_title, poll_user_responses, insight_arr } = req.body;
 
   try {
 
-    let news_key = "news"+1+""+5;
-    await clearCache("news_array.id="+news_key)
+    let news_key = "news" + 1 + "" + 5;
+    await clearCache("news_array.id=" + news_key)
 
 
     const news = await News.create({
-      title, content, image, timestamp, author, views, tags, addAt, updatedAt,read_more_link,form_link,news_type,poll_title,poll_user_responses,insight_arr
+      title, content, image, timestamp, author, views, tags, addAt, updatedAt, read_more_link, form_link, news_type, poll_title, poll_user_responses, insight_arr
     });
+
+    const notification = await Notification.create({"text":news.title,timestamp:Date.now(),image:news.image})
+
+    const notifyPayload = {
+      notifyId: notification._id,
+      readStatus:false
+    } 
+
+    await User.updateMany({ $or: [{ "interest.name": "math" }, { "interest.name": "history" }] }, { $push: { notifications: notifyPayload } }, { $new: true });
+
+
+
     res.status(201).json({
       success: true,
-      data: news,
+      data: notification,
 
     });
   } catch (err) {
@@ -26,18 +40,73 @@ exports.addNews = async (req, res, next) => {
   }
 };
 exports.addSlide = async (req, res, next) => {
-  const { title, content, image, timestamp, author, views, tags, addAt, updatedAt } = req.body;
 
   try {
 
+    // const news = await News.create(req.body)
 
-    const slide = await Slide.create({
-      title, content, image, timestamp, author, views, tags, addAt, updatedAt,
-    });
-    
+    // const newsPayload = {
+    //   newsId: news._id,
+    // }
+
+
+    // 
+    //   await User.updateMany({ $or: [{ "interest.name": "math" }, { "interest.name": "history" }] }, { $push: { post_collections: newsPayload } }, { $new: true });
+
+    //  const users = await User.find({"email":"shivamnamdeo0101@gmail.com"}).select("notifications").populate({
+    //   path: 'notificationrefs',
+    //   // Get friends of friends - populate the 'friends' array for every friend
+    // });
+
+    // const users = await User.find({ "email": "shivamnamdeo0101@gmail.com" }).populate({ path: 'notifications', select: 'notifications' });
+
+
+    // const users = await User.findOne({ "email": "shivamnamdeo0101@gmail.com" }).populate({
+    //   path: 'notifications',
+    //   model: 'Notification'
+    // }).exec(function (err, user) {
+    //   if (err) return handleError(err);
+    //   console.log('Here is the populated user: ', user.notifications);
+    // });
+    //  var pageNo = 1;
+    //  var size = 5;
+
+    // var skip = size * (pageNo - 1);
+
+
+    //  const users = await User.find({"email":"shivamnamdeo0101@gmail.com"}).select("post_collections")
+    //                 .populate({ path: 'notificationrefs', select: ['_id', 'text','image','timestamp'] })
+    //                 .skip(skip)
+    //                 .limit(size)
+
+
+
+
+    let users = await User.aggregate([
+      { $match: { email: "shivamnamdeo01@gmail.com" } },
+      {
+        $lookup: {
+          from: "news",
+          localField: "post_collections.newsId",
+          foreignField: "_id",
+          as: "news"
+        }
+
+      },
+     
+      { $unwind: { path: "$news" } },
+      { $project: {_id:0, newsId: '$news._id',timestamp: '$news.title',image: '$news.image',addAt: { $first: "$post_collections.addAt" }, }},
+     { $sort: { timestamp: 1 } }
+
+    ])
+
+
+
+
     res.status(201).json({
       success: true,
-      data: slide,
+      length: users.length,
+      data: users,
 
     });
   } catch (err) {
@@ -48,17 +117,17 @@ exports.addSlide = async (req, res, next) => {
 
 
 exports.searchNews = async (req, res, next) => {
-  let query  = req.params.query;
-  let search =  await News.find({ "title" : { $regex : new RegExp(query, "i") } });
-  
- 
+  let query = req.params.query;
+  let search = await News.find({ "title": { $regex: new RegExp(query, "i") } });
+
+
   // const news = await News.find({}, query).populate({ path: 'category', select: ['_id', 'category_name'] }).populate({ path: 'addedBy', select: ['name', 'email']})
   res.json({
     success: true,
-    query:query,
+    query: query,
     count: search.length,
     data: search,
-   
+
   });
 };
 
@@ -87,9 +156,9 @@ exports.getInsight = async (req, res, next) => {
 
 
 exports.editNews = async (req, res, next) => {
-  let news_key = "news"+1+""+5;
-  await clearCache("news_array.id="+news_key)
-  
+  let news_key = "news" + 1 + "" + 5;
+  await clearCache("news_array.id=" + news_key)
+
   let news = await News.findById(req.params.newsId);
 
   if (!news) {
@@ -149,9 +218,9 @@ exports.getSlideById = async (req, res, next) => {
 
 exports.remNewsById = async (req, res, next) => {
 
-  let news_key = "news"+1+""+5;
-  await clearCache("news_array.id="+news_key)
-  await clearCache("news_array.id="+"total_news")
+  let news_key = "news" + 1 + "" + 5;
+  await clearCache("news_array.id=" + news_key)
+  await clearCache("news_array.id=" + "total_news")
   const news = await News.findByIdAndDelete(req.params.newsId);
   if (!news) {
     return res.status(401).json({
@@ -174,11 +243,11 @@ exports.getNews = async (req, res, next) => {
   var size = req.params.perPage;
   var pageNo = req.params.page; // parseInt(req.query.pageNo)
 
-  let news_key = "news"+pageNo+""+size;
-  let news = await getCache("news_array.id=",news_key)
-  let total_news_count = await getCache("news_array.id=","total_news")
+  let news_key = "news" + pageNo + "" + size;
+  let news = await getCache("news_array.id=", news_key)
+  let total_news_count = await getCache("news_array.id=", "total_news")
 
-  if(news){
+  if (news) {
     return res.json({
       success: true,
       count: total_news_count,
@@ -200,15 +269,15 @@ exports.getNews = async (req, res, next) => {
   query.skip = size * (pageNo - 1);
   query.limit = size;
 
-   let result = await News.find({ news_type: { $regex: 'feed' } })
+  let result = await News.find({ news_type: { $regex: 'feed' } })
     .sort({ 'timestamp': 'desc' })
     .populate({ path: "addAt", select: ["_id"] })
     .sort("-_id")
     .limit(Number(query.limit))
     .skip(Number(query.skip));
 
-  setCache("news_array.id=",news_key,result)
-  setCache("news_array.id=","total_news",total_news.length)
+  setCache("news_array.id=", news_key, result)
+  setCache("news_array.id=", "total_news", total_news.length)
   // const news = await News.find({}, query).populate({ path: 'category', select: ['_id', 'category_name'] }).populate({ path: 'addedBy', select: ['name', 'email']})
   res.json({
     success: true,
@@ -224,19 +293,19 @@ exports.getNewsAdmin = async (req, res, next) => {
 
   var pageNo = req.params.page; // parseInt(req.query.pageNo)
   var size = req.params.perPage;
-  
-  let news_key = "news"+pageNo+""+size;
-  let news = await getCache("news_array.id=",news_key)
-  let total_news_count = await getCache("news_array.id=","total_news")
 
-  if(news){
+  let news_key = "news" + pageNo + "" + size;
+  let news = await getCache("news_array.id=", news_key)
+  let total_news_count = await getCache("news_array.id=", "total_news")
+
+  if (news) {
     return res.json({
       success: true,
       count: total_news_count,
       data: news,
     });
   }
-  
+
 
 
   var query = {};
@@ -253,7 +322,7 @@ exports.getNewsAdmin = async (req, res, next) => {
   query.skip = size * (pageNo - 1);
   query.limit = size;
 
-   let result = await News.find({})
+  let result = await News.find({})
     .sort({ 'timestamp': 'desc' })
     .populate({ path: "addAt", select: ["_id"] })
     .sort("-_id")
@@ -261,9 +330,9 @@ exports.getNewsAdmin = async (req, res, next) => {
     .skip(Number(query.skip));
 
 
-  
-  setCache("news_array.id=",news_key,result)
-  setCache("news_array.id=","total_news",total_news.length)
+
+  setCache("news_array.id=", news_key, result)
+  setCache("news_array.id=", "total_news", total_news.length)
   // const news = await News.find({}, query).populate({ path: 'category', select: ['_id', 'category_name'] }).populate({ path: 'addedBy', select: ['name', 'email']})
   res.json({
     success: true,
@@ -278,7 +347,7 @@ exports.getNewsAdmin = async (req, res, next) => {
 
 exports.addPoll = async (req, res, next) => {
 
-  try {   
+  try {
 
     const post = await News.findById(req.body.postId)
 
@@ -289,7 +358,7 @@ exports.addPoll = async (req, res, next) => {
       });
     }
 
-    await post.poll_user_responses.push({"userId":req.body.userId,"msg":req.body.msg})
+    await post.poll_user_responses.push({ "userId": req.body.userId, "msg": req.body.msg })
     await post.save()
 
     //setCache("users.id=",req.params.userId,user)
@@ -304,7 +373,7 @@ exports.addPoll = async (req, res, next) => {
 
 exports.getPoll = async (req, res, next) => {
 
-  try {   
+  try {
 
     const post = await News.findById(req.params.postId)
 
@@ -339,8 +408,8 @@ exports.remPoll = async (req, res, next) => {
         msg: "Post Not found.",
       });
     }
-    
-    post.poll_user_responses.splice(post.poll_user_responses.findIndex(e => e.userId === req.body.userId),1);
+
+    post.poll_user_responses.splice(post.poll_user_responses.findIndex(e => e.userId === req.body.userId), 1);
     post.save()
 
     //setCache("users.id=",req.params.userId,user)

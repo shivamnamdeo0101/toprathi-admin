@@ -5,7 +5,7 @@ const { addNews,getNews,addSlide,getSlide,editNews,getNewsById,remNewsById,getSl
 
 const {getNewsCache} = require("../middleware/redisCache");
 
-const {updateUser,getUserById, saveCollectionToUser, notify, remCollectionToUser, getCollectionToUser, getProfileCollection, updateProfileImg, getProfileImg, updateNotifyToken, setUserSuccessRegister} = require("../controllers/user")
+const {updateUser,getUserById, saveCollectionToUser, notify, remCollectionToUser, getCollectionToUser, getProfileCollection, updateProfileImg, getProfileImg, updateNotifyToken, setUserSuccessRegister, getUserNotifications} = require("../controllers/user")
 const { protect } = require("../middleware/auth");
 const { sendPushNotification } = require("../utils/sendPushNotification");
 
@@ -51,14 +51,16 @@ router.route("/poll").delete(remPoll);
 router.route("/notify-token-update").put(updateNotifyToken);
 router.route("/notify").post(notify);
 
-
 router.route("/success/:userId").put(setUserSuccessRegister);
+
 
 
 router.route("/user/:userId").put(updateUser);
 router.route("/user/:userId").get(protect,getUserById);
 router.route("/profile-img").put(updateProfileImg);
 router.route("/profile-img/:userId").get(getProfileImg);
+router.route("/user-notifications/:userId").get(protect,getUserNotifications);
+
 
 
 
