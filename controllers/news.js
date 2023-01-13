@@ -4,6 +4,7 @@ const { setCache, getCache, clearCache } = require("../middleware/redisCache")
 const User = require("../models/User")
 const Notification = require("../models/Notification");
 const { findOne } = require("../models/News");
+const { sendPushNotification } = require("../utils/sendPushNotification");
 
 // @desc    ADd news
 exports.addNews = async (req, res, next) => {
@@ -26,8 +27,11 @@ exports.addNews = async (req, res, next) => {
       readStatus:false
     } 
 
-    await User.updateMany({ $or: [{ "interest.name": "math" }, { "interest.name": "history" }] }, { $push: { notifications: notifyPayload } }, { $new: true });
+    
 
+    await User.updateMany({ $or: [{ "interest.name": "math" }, { "interest.name": "science" }] }, { $push: { notifications: notifyPayload } }, { $new: true });
+
+    await sendPushNotification(news)
 
 
     res.status(201).json({

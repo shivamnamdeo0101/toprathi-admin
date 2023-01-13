@@ -44,9 +44,9 @@ exports.updateUser = async (req, res, next) => {
 
 exports.getUserNotifications = async (req, res, next) => {
 
-  try { 
+  try {
 
-    
+
     let id = mongoose.Types.ObjectId(req.params.userId);
 
     const list = await User.aggregate([
@@ -56,21 +56,24 @@ exports.getUserNotifications = async (req, res, next) => {
           from: "notifications",
           localField: "notifications.notifyId",
           foreignField: "_id",
-          as: "notifications"
+          as: "notifications_"
         }
 
-        
+
       },
 
-       { $unwind: { path: "$notifications" } },
-      { $project: {_id:0, notifyId: '$notifications._id',timestamp: '$notifications.timestamp',text: '$notifications.text',image: '$notifications.image',readStatus: { $first: '$notifications.readStatus' },}},
+      { $unwind: { path: "$notifications_" } },
+
+      { $unwind: { path: "$notifications" } },
+
+      { $project: { _id: 0, notifyId: '$notifications_._id', timestamp: '$notifications_.timestamp', text: '$notifications_.text', image: '$notifications_.image', readStatus: '$notifications.readStatus' } },
       { $sort: { timestamp: 1 } }
 
     ])
     res.status(200).json({
       success: true,
-      length:list.length,
-      data:list,
+      length: list.length,
+      data: list,
     });
   } catch (err) {
     next(err);
@@ -80,7 +83,7 @@ exports.getUserNotifications = async (req, res, next) => {
 
 
 exports.setUserSuccessRegister = async (req, res, next) => {
-  const { isSuccess,userId } = req.body;
+  const { isSuccess, userId } = req.body;
 
   try {
 
@@ -128,6 +131,7 @@ exports.getUserById = async (req, res, next) => {
     //   });
     // }
 
+
     let user = await User.findById(req.params.userId);
 
     //setCache("users.id=",req.params.userId,user)
@@ -137,6 +141,7 @@ exports.getUserById = async (req, res, next) => {
         msg: "User not found.",
       });
     }
+
 
     res
       .status(200)
@@ -155,15 +160,16 @@ exports.saveCollectionToUser = async (req, res, next) => {
   try {
 
 
+
     const user = await User.findById(req.body.userId)
     const post = await News.findById(req.body.postId)
 
     const newsPayload = {
-      "newsId":req.body.postId,
-      
+      "newsId": req.body.postId,
+
     }
 
-   
+
     if (!user || !post) {
       return res.status(401).json({
         success: false,
@@ -171,7 +177,7 @@ exports.saveCollectionToUser = async (req, res, next) => {
       });
     }
 
-    user.post_collections.push({ "newsId": req.body.postId,addAt:Date.now() })
+    user.post_collections.push({ "newsId": req.body.postId, addAt: Date.now() })
     user.save()
 
     //setCache("users.id=",req.params.userId,user)
@@ -211,6 +217,7 @@ exports.remCollectionToUser = async (req, res, next) => {
 };
 
 
+
 exports.getCollectionToUser = async (req, res, next) => {
 
   try {
@@ -225,7 +232,7 @@ exports.getCollectionToUser = async (req, res, next) => {
     }
 
     const check = obj => {
-     console.log(obj)
+      console.log(obj)
     };
 
     const result = user.post_collections.some(check)
@@ -255,10 +262,10 @@ exports.getProfileCollection = async (req, res, next) => {
         }
 
       },
-     
+
       { $unwind: { path: "$news" } },
-      { $project: {_id:0, newsId: '$news._id',timestamp: '$news.timestamp',title: '$news.title',tags: '$news.tags', content: '$news.content',news_type:'$news.news_type' ,image: '$news.image',addAt: { $first: "$post_collections.addAt" }, }},
-     { $sort: { addAt: 1 } }
+      { $project: { _id: 0, newsId: '$news._id', timestamp: '$news.timestamp', title: '$news.title', tags: '$news.tags', content: '$news.content', news_type: '$news.news_type', image: '$news.image', addAt: { $first: "$post_collections.addAt" }, } },
+      { $sort: { addAt: 1 } }
 
     ])
 
