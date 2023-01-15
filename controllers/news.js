@@ -273,15 +273,17 @@ exports.getNews = async (req, res, next) => {
   query.skip = size * (pageNo - 1);
   query.limit = size;
 
-  let result = await News.find({ news_type: { $regex: 'feed' } })
+  let result = await News.find({ news_type: { $in: ['feed','insight','slide'] } })
+    // .select(["_id","image","timestamp","tags","title","content"])
     .sort({ 'timestamp': 'desc' })
     .populate({ path: "addAt", select: ["_id"] })
     .sort("-_id")
     .limit(Number(query.limit))
     .skip(Number(query.skip));
 
-  setCache("news_array.id=", news_key, result)
-  setCache("news_array.id=", "total_news", total_news.length)
+   
+  // setCache("news_array.id=", news_key, result)
+  // setCache("news_array.id=", "total_news", total_news.length)
   // const news = await News.find({}, query).populate({ path: 'category', select: ['_id', 'category_name'] }).populate({ path: 'addedBy', select: ['name', 'email']})
   res.json({
     success: true,

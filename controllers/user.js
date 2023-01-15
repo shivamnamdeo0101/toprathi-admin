@@ -43,14 +43,12 @@ exports.updateUser = async (req, res, next) => {
 
 
 exports.getUserNotifications = async (req, res, next) => {
-
   try {
-
-
     let id = mongoose.Types.ObjectId(req.params.userId);
 
     const list = await User.aggregate([
       { $match: { _id: id } },
+      {$unwind : "$notifications"},
       {
         $lookup: {
           from: "notifications",
@@ -58,16 +56,11 @@ exports.getUserNotifications = async (req, res, next) => {
           foreignField: "_id",
           as: "notifications_"
         }
-
-
       },
-
       { $unwind: { path: "$notifications_" } },
-
       { $unwind: { path: "$notifications" } },
-
       { $project: { _id: 0, notifyId: '$notifications_._id', timestamp: '$notifications_.timestamp', text: '$notifications_.text', image: '$notifications_.image', readStatus: '$notifications.readStatus' } },
-      { $sort: { timestamp: 1 } }
+      { $sort: { timestamp: -1 } }
 
     ])
     res.status(200).json({
@@ -221,24 +214,23 @@ exports.remCollectionToUser = async (req, res, next) => {
 exports.getCollectionToUser = async (req, res, next) => {
 
   try {
+    let id = mongoose.Types.ObjectId(req.params.userId);
 
-    const user = await User.findById(req.params.userId)
+    const list = await User.findById(req.params.userId,{'post_collections':{$elemMatch:{'newsId' :req.params.postId}}})
 
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        msg: "Not found.",
-      });
+    console.log("userId",req.params.userId,"postId",req.params.postId,"List",list)
+
+    if(list.post_collections.length === 0){
+      res.status(200)
+      .json({ success: true, data: false, msg: "Success" });
+    }else{
+      res.status(200)
+      .json({ success: true, data: true, msg: "Success" });
     }
 
-    const check = obj => {
-      console.log(obj)
-    };
+   
 
-    const result = user.post_collections.some(check)
-
-    res.status(200)
-      .json({ success: true, data: result, msg: "Success" });
+   
 
   } catch (err) {
     next(err);
@@ -249,25 +241,37 @@ exports.getCollectionToUser = async (req, res, next) => {
 exports.getProfileCollection = async (req, res, next) => {
 
   let id = mongoose.Types.ObjectId(req.params.userId);
+  const size = 8 ; const pageNo = req.params.pageNo;
+  const skip = size * (pageNo -1);
+
   try {
 
     const list = await User.aggregate([
       { $match: { _id: id } },
+      {$unwind:  '$post_collections'},
+     
       {
         $lookup: {
           from: "news",
           localField: "post_collections.newsId",
           foreignField: "_id",
-          as: "news"
+          as: "news_"
         }
 
       },
 
-      { $unwind: { path: "$news" } },
-      { $project: { _id: 0, newsId: '$news._id', timestamp: '$news.timestamp', title: '$news.title', tags: '$news.tags', content: '$news.content', news_type: '$news.news_type', image: '$news.image', addAt: { $first: "$post_collections.addAt" }, } },
-      { $sort: { addAt: 1 } }
-
+      { $unwind: { path: '$news_'}},
+     { $project: { _id: 0, newsId: '$news_._id', timestamp: '$news_.timestamp', title: '$news_.title', tags: '$news_.tags', content: '$news_.content', news_type: '$news_.news_type', image: '$news_.image', addAt: '$post_collections.addAt'  } },
+      { $sort: { addAt: -1 } },
+     
+      {$skip: skip },
+      {$limit: size } 
+    
+    
     ])
+
+
+    
 
     if (!list) {
       return res.status(401).json({
@@ -277,7 +281,7 @@ exports.getProfileCollection = async (req, res, next) => {
     }
 
     res.status(200)
-      .json({ success: true, data: list, msg: "Success" });
+      .json({ length : list.length,success: true, data: list, msg: "Success" });
 
   } catch (err) {
     next(err);

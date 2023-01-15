@@ -40,7 +40,7 @@ router.route("/collection").post(saveCollectionToUser);
 router.route("/collection").delete(remCollectionToUser);
 router.route("/collection/:userId/:postId").get(getCollectionToUser);
 
-router.route("/collection/:userId").get(getProfileCollection);
+router.route("/profile-collection/:userId/:pageNo").get(getProfileCollection);
 
 
 router.route("/poll").post(addPoll);
