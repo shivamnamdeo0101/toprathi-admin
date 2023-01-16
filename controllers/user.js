@@ -48,7 +48,7 @@ exports.getUserNotifications = async (req, res, next) => {
 
     const list = await User.aggregate([
       { $match: { _id: id } },
-      {$unwind : "$notifications"},
+      { $unwind: "$notifications" },
       {
         $lookup: {
           from: "notifications",
@@ -185,9 +185,20 @@ exports.saveCollectionToUser = async (req, res, next) => {
 
 exports.remCollectionToUser = async (req, res, next) => {
 
+  let postId = mongoose.Types.ObjectId(req.body.postId);
+  let userId = mongoose.Types.ObjectId(req.body.userId)
+
+  console.log("Enter in postId")
+
   try {
 
-    const user = await User.findById(req.body.userId)
+    //const user = await User.updateOne({ _id: userId }, { $pull: { 'post_collections.newsId': postId } });
+    //
+    const user = await User.updateOne({ _id: userId }, { "$pull": { "post_collections": { "newsId": postId } } }, { safe: true, multi: true });
+
+    // const user = await User.findById(req.body.userId)
+
+    console.log(postId, "=============Alisha")
 
     if (!user) {
       return res.status(401).json({
@@ -196,8 +207,8 @@ exports.remCollectionToUser = async (req, res, next) => {
       });
     }
 
-    user.post_collections.splice(user.post_collections.findIndex(e => e.postId === req.body.postId), 1);
-    user.save()
+
+
 
     //setCache("users.id=",req.params.userId,user)
     res
@@ -216,21 +227,21 @@ exports.getCollectionToUser = async (req, res, next) => {
   try {
     let id = mongoose.Types.ObjectId(req.params.userId);
 
-    const list = await User.findById(req.params.userId,{'post_collections':{$elemMatch:{'newsId' :req.params.postId}}})
+    const list = await User.findById(req.params.userId, { 'post_collections': { $elemMatch: { 'newsId': req.params.postId } } })
 
-    console.log("userId",req.params.userId,"postId",req.params.postId,"List",list)
+    console.log("userId", req.params.userId, "postId", req.params.postId, "List", list)
 
-    if(list.post_collections.length === 0){
+    if (list.post_collections.length === 0) {
       res.status(200)
-      .json({ success: true, data: false, msg: "Success" });
-    }else{
+        .json({ success: true, data: false, msg: "Success" });
+    } else {
       res.status(200)
-      .json({ success: true, data: true, msg: "Success" });
+        .json({ success: true, data: true, msg: "Success" });
     }
 
-   
 
-   
+
+
 
   } catch (err) {
     next(err);
@@ -241,15 +252,15 @@ exports.getCollectionToUser = async (req, res, next) => {
 exports.getProfileCollection = async (req, res, next) => {
 
   let id = mongoose.Types.ObjectId(req.params.userId);
-  const size = 8 ; const pageNo = req.params.pageNo;
-  const skip = size * (pageNo -1);
+  const size = 8; const pageNo = req.params.pageNo;
+  const skip = size * (pageNo - 1);
 
   try {
 
     const list = await User.aggregate([
       { $match: { _id: id } },
-      {$unwind:  '$post_collections'},
-     
+      { $unwind: '$post_collections' },
+
       {
         $lookup: {
           from: "news",
@@ -260,18 +271,24 @@ exports.getProfileCollection = async (req, res, next) => {
 
       },
 
-      { $unwind: { path: '$news_'}},
-     { $project: { _id: 0, newsId: '$news_._id', timestamp: '$news_.timestamp', title: '$news_.title', tags: '$news_.tags', content: '$news_.content', news_type: '$news_.news_type', image: '$news_.image', addAt: '$post_collections.addAt'  } },
+      { $unwind: { path: '$news_' } },
+      {
+        $project: {
+          _id: 0, newsId: '$news_._id', timestamp: '$news_.timestamp',
+          title: '$news_.title', tags: '$news_.tags',
+          content: '$news_.content', news_type: '$news_.news_type',
+          image: '$news_.image', addAt: '$post_collections.addAt'
+        }
+      },
       { $sort: { addAt: -1 } },
-     
-      {$skip: skip },
-      {$limit: size } 
-    
-    
+
+      { $skip: skip },
+      { $limit: size }
+
     ])
 
 
-    
+
 
     if (!list) {
       return res.status(401).json({
@@ -281,7 +298,7 @@ exports.getProfileCollection = async (req, res, next) => {
     }
 
     res.status(200)
-      .json({ length : list.length,success: true, data: list, msg: "Success" });
+      .json({ length: list.length, success: true, data: list, msg: "Success" });
 
   } catch (err) {
     next(err);
