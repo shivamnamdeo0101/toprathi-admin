@@ -24,6 +24,7 @@ exports.addNews = async (req, res, next) => {
 
     const notifyPayload = {
       notifyId: notification._id,
+      refId:news._id,
       readStatus:false
     } 
 
@@ -121,9 +122,15 @@ exports.addSlide = async (req, res, next) => {
 
 
 exports.searchNews = async (req, res, next) => {
-  let query = req.params.query;
-  let search = await News.find({ "title": { $regex: new RegExp(query, "i") } });
 
+  const pageNo = req.params.pageNo;
+  const size = 8; 
+  const skip = size * (pageNo - 1);
+  const limit = size;
+  let query = req.params.query;
+  //let total = await News.find({ "title": { $regex: new RegExp(query, "i") } }).countDocuments()
+  let search = await News.find({ "title": { $regex: new RegExp(query, "i") } }).select(['_id','timestamp','image','tags','title','content']) .sort([['title',1],['timestamp',-1]]).limit(Number(limit))
+  .skip(Number(skip));
 
   // const news = await News.find({}, query).populate({ path: 'category', select: ['_id', 'category_name'] }).populate({ path: 'addedBy', select: ['name', 'email']})
   res.json({
@@ -268,7 +275,7 @@ exports.getNews = async (req, res, next) => {
     return res.json(response);
   }
 
-  total_news = await News.find({});
+  // total_news = await News.find({});
 
   query.skip = size * (pageNo - 1);
   query.limit = size;
@@ -281,18 +288,17 @@ exports.getNews = async (req, res, next) => {
     .limit(Number(query.limit))
     .skip(Number(query.skip));
 
-   
+  
   // setCache("news_array.id=", news_key, result)
   // setCache("news_array.id=", "total_news", total_news.length)
   // const news = await News.find({}, query).populate({ path: 'category', select: ['_id', 'category_name'] }).populate({ path: 'addedBy', select: ['name', 'email']})
   res.json({
     success: true,
-    count: total_news.length,
+    count: result.length,
     limit: Number(query.limit),
     data: result,
   });
 };
-
 
 exports.getNewsAdmin = async (req, res, next) => {
 

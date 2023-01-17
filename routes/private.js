@@ -32,7 +32,7 @@ router.route("/slide").get(getSlide);
 router.route("/insight").get(getInsight);
 
 
-router.route("/search/:query").get(searchNews);
+router.route("/search/:query/:pageNo").get(searchNews);
 
 
 router.route("/collection").post(saveCollectionToUser);
@@ -60,7 +60,7 @@ router.route("/user/:userId").put(updateUser);
 router.route("/user/:userId").get(protect,getUserById);
 router.route("/profile-img").put(updateProfileImg);
 router.route("/profile-img/:userId").get(getProfileImg);
-router.route("/user-notifications/:userId").get(protect,getUserNotifications);
+router.route("/user-notifications/:userId/:pageNo").get(protect,getUserNotifications);
 
 
 

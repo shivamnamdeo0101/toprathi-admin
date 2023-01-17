@@ -34,6 +34,7 @@ const UserSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'News'
     },
+    
     addAt:{
       type:Number,
       default:Date.now()
@@ -44,11 +45,16 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Notification'
     },
+    refId: {
+      type: mongoose.Schema.Types.ObjectId,
+      // ref: 'News'
+    },
     readStatus: {
         type: Boolean,
         default: false
       }
     }
+    
 
   ],
 

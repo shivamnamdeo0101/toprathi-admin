@@ -40,12 +40,12 @@ exports.updateUser = async (req, res, next) => {
   }
 };
 
-
-
 exports.getUserNotifications = async (req, res, next) => {
   try {
     let id = mongoose.Types.ObjectId(req.params.userId);
-
+    const size = 12 ; const pageNo = req.params.pageNo;
+    const skip = size * (pageNo - 1);
+  
     const list = await User.aggregate([
       { $match: { _id: id } },
       { $unwind: "$notifications" },
@@ -56,11 +56,15 @@ exports.getUserNotifications = async (req, res, next) => {
           foreignField: "_id",
           as: "notifications_"
         }
+
       },
       { $unwind: { path: "$notifications_" } },
-      { $unwind: { path: "$notifications" } },
-      { $project: { _id: 0, notifyId: '$notifications_._id', timestamp: '$notifications_.timestamp', text: '$notifications_.text', image: '$notifications_.image', readStatus: '$notifications.readStatus' } },
-      { $sort: { timestamp: -1 } }
+      { $project: { _id: 0, notifyId: '$notifications.notifyId', refId: '$notifications.refId', timestamp: '$notifications_.timestamp', title: '$notifications_.text',content: '$notifications_.text',  image: '$notifications_.image', readStatus: '$notifications.readStatus' } },
+      { $sort: { timestamp: -1 } },
+      { $skip: skip },
+      { $limit: size }
+
+
 
     ])
     res.status(200).json({
