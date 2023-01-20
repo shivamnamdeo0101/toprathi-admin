@@ -13,7 +13,7 @@ const path = require('path');
 connectDB();
 
 app.use(cors({
-  "origin": ['https://toprathi-admin.onrender.com','https://toprathi-9ce5d.web.app'],
+  "origin": ['https://toprathi-admin.onrender.com','https://toprathi-9ce5d.web.app','http://localhost:3000'],
   "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
   "preflightContinue": false,
   "optionsSuccessStatus": 204

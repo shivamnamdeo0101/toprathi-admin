@@ -15,8 +15,8 @@ function LeftSideBar() {
           <div className='left_side_menu_comp' onClick={()=>history.push("/add-post")}>
             <h6>Add Article</h6>
           </div>
-          <div className='left_side_menu_comp' onClick={()=>history.push("/add-slide")}>
-            <h6>Add Slide</h6>
+          <div className='left_side_menu_comp' onClick={()=>history.push("/add-schlorship")}>
+            <h6>Add Schlorship</h6>
           </div>
           <div className='left_side_menu_comp' onClick={()=>history.push("/articles")}>
             <h6>Articles</h6>

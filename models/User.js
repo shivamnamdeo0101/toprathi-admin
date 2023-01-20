@@ -57,8 +57,6 @@ const UserSchema = new mongoose.Schema({
     
 
   ],
-
-
   education: {
     type: mongoose.SchemaTypes.Mixed,
   },

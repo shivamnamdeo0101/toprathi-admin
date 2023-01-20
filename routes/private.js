@@ -1,13 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const { getPrivateRoute} = require("../controllers/private");
-const { addNews,getNews,addSlide,getSlide,editNews,getNewsById,remNewsById,getSlideById, getInsight, searchNews, getNewsAdmin, addPoll, getPoll, remPoll} = require("../controllers/news");
+const { addNews,getNews,addSlide,getSlide,editNews,getNewsById,remNewsById,getSlideById, getInsight, searchNews, getNewsAdmin, addPoll, getPoll, remPoll, searchTitle} = require("../controllers/news");
 
 const {getNewsCache} = require("../middleware/redisCache");
 
 const {updateUser,getUserById, saveCollectionToUser, notify, remCollectionToUser, getCollectionToUser, getProfileCollection, updateProfileImg, getProfileImg, updateNotifyToken, setUserSuccessRegister, getUserNotifications} = require("../controllers/user")
 const { protect } = require("../middleware/auth");
 const { sendPushNotification } = require("../utils/sendPushNotification");
+const { addFilter, getFilter } = require("../controllers/filter");
+const { addSch, getAllSch, getAllSchAdmin } = require("../controllers/schlorship");
+
+
+
 
 router.route("/").get(protect, getPrivateRoute);
 router.route("/news").post(protect,addNews);
@@ -33,6 +38,9 @@ router.route("/insight").get(getInsight);
 
 
 router.route("/search/:query/:pageNo").get(searchNews);
+router.route("/search-title/:query").get(searchTitle);
+
+
 
 
 router.route("/collection").post(saveCollectionToUser);
@@ -61,6 +69,28 @@ router.route("/user/:userId").get(protect,getUserById);
 router.route("/profile-img").put(updateProfileImg);
 router.route("/profile-img/:userId").get(getProfileImg);
 router.route("/user-notifications/:userId/:pageNo").get(protect,getUserNotifications);
+
+
+// Filters
+
+router.route("/filter-add").post(addFilter)
+router.route("/filter-get/:type").get(getFilter)
+
+
+getFilter
+
+//Schlorship
+
+router.route("/sch-add").post(addSch)
+router.route("/sch-getall").post(getAllSch)
+
+
+
+//Admin
+
+router.route("/admin-sch-getall").post(getAllSchAdmin)
+
+
 
 
 

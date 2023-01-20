@@ -274,3 +274,19 @@ body {
 .flex_row>p{
   margin-right: 5px;
 }
+
+.dash_grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(400px,1fr));
+}
+
+.dash_grid_comp{
+
+}
+
+
+.dash_grid_list{
+  max-height: 80vh;
+  overflow-y: scroll;
+  height: 100vh;
+}

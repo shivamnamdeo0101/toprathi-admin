@@ -45,13 +45,14 @@ exports.getUserNotifications = async (req, res, next) => {
     let id = mongoose.Types.ObjectId(req.params.userId);
     const size = 12 ; const pageNo = req.params.pageNo;
     const skip = size * (pageNo - 1);
+    
   
     const list = await User.aggregate([
       { $match: { _id: id } },
       { $unwind: "$notifications" },
       {
         $lookup: {
-          from: "notifications",
+          from: "notifications",  
           localField: "notifications.notifyId",
           foreignField: "_id",
           as: "notifications_"

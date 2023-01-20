@@ -121,6 +121,22 @@ exports.addSlide = async (req, res, next) => {
 
 
 
+exports.searchTitle = async (req, res, next) => {
+
+  const limit = 100;
+  let query = req.params.query;
+  let search = await News.find({ "title": { $regex: new RegExp(query, "i") } }).select(['_id','title','timestamp']) .sort([['title',1],['timestamp',-1]]).limit(Number(limit))
+
+  // const news = await News.find({}, query).populate({ path: 'category', select: ['_id', 'category_name'] }).populate({ path: 'addedBy', select: ['name', 'email']})
+  res.json({
+    success: true,
+    query: query,
+    count: search.length,
+    data: search,
+
+  });
+}
+
 exports.searchNews = async (req, res, next) => {
 
   const pageNo = req.params.pageNo;
@@ -136,11 +152,12 @@ exports.searchNews = async (req, res, next) => {
   res.json({
     success: true,
     query: query,
+    pageNo:pageNo,
     count: search.length,
     data: search,
 
   });
-};
+}
 
 exports.getSlide = async (req, res, next) => {
 
