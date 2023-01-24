@@ -5,6 +5,10 @@ const initialState = {
     caste: [],
     authority: [],
     region: [],
+    interest:[],
+    branch:[],
+    stream:[],
+    examlist:[]
 };
 export const SchFilterSlice = createSlice({
     name: 'sch',
@@ -26,6 +30,18 @@ export const SchFilterSlice = createSlice({
         setRegion: (state, action) => {
             state.region = action.payload;
         },
+        setExamList: (state, action) => {
+            state.examlist = action.payload;
+        },
+        setInterestList: (state, action) => {
+            state.interest = action.payload;
+        },
+        setBranchList: (state, action) => {
+            state.branch = action.payload;
+        },
+        setStreamList: (state, action) => {
+            state.stream = action.payload;
+        },
 
         flushAuthData: (state) => {
             localStorage.clear();
@@ -33,6 +49,6 @@ export const SchFilterSlice = createSlice({
         },
     },
 });
-export const { setFromWhere,setEducationType,setCaste,setAuthority,setRegion } = SchFilterSlice.actions;
+export const { setFromWhere,setEducationType,setCaste,setAuthority,setRegion,setExamList,setInterestList,setBranchList,setStreamList } = SchFilterSlice.actions;
 
 export default SchFilterSlice.reducer;

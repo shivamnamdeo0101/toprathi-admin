@@ -196,7 +196,6 @@ function AddPostComp() {
                             onChange={settags}
                             options={options}
                             isMulti={true}
-
                             isSearchable={true}
                         />
 

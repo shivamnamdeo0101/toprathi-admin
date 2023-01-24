@@ -16,16 +16,31 @@ function LeftSideBar() {
             <h6>Add Article</h6>
           </div>
           <div className='left_side_menu_comp' onClick={()=>history.push("/add-schlorship")}>
-            <h6>Add Schlorship</h6>
+            <h6>Schlorship</h6>
           </div>
-          <div className='left_side_menu_comp' onClick={()=>history.push("/articles")}>
-            <h6>Articles</h6>
+          <div className='left_side_menu_comp' onClick={()=>history.push("/form/region")}>
+            <h6>Regions</h6>
           </div>
-          <div className='left_side_menu_comp'>
-            <h6>Slider</h6>
+          <div className='left_side_menu_comp' onClick={()=>history.push("/form/authority")}>
+            <h6>Authority</h6>
           </div>
-          <div className='left_side_menu_comp'>
-            <h6>Others</h6>
+          <div className='left_side_menu_comp' onClick={()=>history.push("/form/educationtype")}>
+            <h6>Education Type</h6>
+          </div>
+          <div className='left_side_menu_comp' onClick={()=>history.push("/form/interest")}>
+            <h6>Interest List</h6>
+          </div>
+          <div className='left_side_menu_comp' onClick={()=>history.push("/form/examlist")}>
+            <h6>Exams List</h6>
+          </div>
+          <div className='left_side_menu_comp' onClick={()=>history.push("/form/branch")}>
+            <h6>Branch List</h6>
+          </div>
+          <div className='left_side_menu_comp' onClick={()=>history.push("/form/stream")}>
+            <h6>Stream List</h6>
+          </div>
+          <div className='left_side_menu_comp' onClick={()=>history.push("/form/caste")}>
+            <h6>Caste List</h6>
           </div>
 
         </div>

@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 
-const AuthorityRef = new mongoose.Schema({
+const StreamRef = new mongoose.Schema({
     timestamp:{
         type: Number,
-        
         default:Date.now()
     },
     value:{
@@ -19,7 +18,8 @@ const AuthorityRef = new mongoose.Schema({
         required: [true, "Please provide IndexId"],
         unique: true
     }
+    
 });
-const Authority = mongoose.model("Authority", AuthorityRef);
+const Stream = mongoose.model("Stream", StreamRef);
 
-module.exports = Authority;
+module.exports = Stream;

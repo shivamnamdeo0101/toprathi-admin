@@ -19,8 +19,16 @@ const UserSchema = new mongoose.Schema({
     ],
   },
   interest: [{
-    name: {
-      type: String,
+    categoryId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'News'
+    },
+    label:{
+      type:String,
+    },
+    addAt:{
+      type:Number,
+      default:Date.now()
     }
   }],
   profile_img: {
@@ -55,24 +63,26 @@ const UserSchema = new mongoose.Schema({
       }
     }
     
-
   ],
   education: {
     type: mongoose.SchemaTypes.Mixed,
   },
   address: {
     country: {
-      type: String,
+      type: mongoose.SchemaTypes.Mixed,
     },
     state: {
-      type: String,
+      type: mongoose.SchemaTypes.Mixed,
     },
     city: {
-      type: String,
+      type: mongoose.SchemaTypes.Mixed,
     },
     pincode: {
       type: Number,
     }
+  },
+  schFilter:{
+    type:mongoose.SchemaTypes.Mixed,
   },
   password: {
     type: String,

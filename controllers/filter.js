@@ -1,21 +1,43 @@
 const Authority = require("../models/Authority");
+const Branch = require("../models/Branch");
 const Caste = require("../models/Caste");
 const EducationType = require("../models/EducationType");
+const ExamList = require("../models/ExamList");
 const FromWhere = require("../models/FromWhere");
+const Interest = require("../models/Interest");
 const Region = require("../models/Region");
 const Schlorship = require("../models/Schlorship");
+const Stream = require("../models/Stream");
+
 
 
 exports.addFilter = async (req, res, next) => {
 
     try {
+        const type = req.body.type
+        let data;
+        delete req.body.type
 
-        //const data = await Authority.create(req.body);
-        //const data = await Caste.create(req.body);
-        //const data = await EducationType.create(req.body);
-        // const data = await FromWhere.create(req.body);
+        if(type == "authority"){
+            data = await Authority.create(req.body);
+        }else if(type === "educationtype"){
+            data = await EducationType.create(req.body);
+        }else if(type === "fromwhere"){
+            data = await FromWhere.create(req.body);
+        }else if(type === "caste"){
+            data = await Caste.create(req.body);
+        }else if(type === "region"){
+            data = await Region.create(req.body);
+        }else if(type === "interest"){
+            data = await Interest.create(req.body);
+        }else if(type === "examlist"){
+            data = await ExamList.create(req.body);
+        }else if(type === "stream"){
+            data = await Stream.create(req.body);
+        }else if(type === "branch"){
+            data = await Branch.create(req.body);
+        }
 
-        const data = await Region.create(req.body);
     
         res.status(201).json({
             success: true,
@@ -26,6 +48,9 @@ exports.addFilter = async (req, res, next) => {
         next(err);
     }
 };
+
+
+
 
 
 exports.getFilter = async (req, res, next) => {
@@ -44,6 +69,14 @@ exports.getFilter = async (req, res, next) => {
             data = await Caste.find({});
         }else if(type === "region"){
             data = await Region.find({});
+        }else if(type === "interest"){
+            data = await Interest.find({});
+        }else if(type === "examlist"){
+            data = await ExamList.find({});
+        }else if(type === "branch"){
+            data = await Branch.find({});
+        }else if(type === "stream"){
+            data = await Stream.find({});
         }
         
 

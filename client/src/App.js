@@ -18,7 +18,8 @@ import EmailVerifyScreen from "./components/screens/EmailVerifyScreen";
 import AddSchScreen from "./components/screens/AddSchScreen";
 import SchFilterService from "./service/api/SchFilterService";
 import { useEffect } from 'react';
-import { setAuthority, setCaste, setEducationType, setFromWhere, setRegion } from "./store/SchFilterSlice";
+import { setAuthority, setBranchList, setCaste, setEducationType, setExamList, setFromWhere, setInterestList, setRegion, setStreamList } from "./store/SchFilterSlice";
+import FormScreen from "./components/screens/FormScreen";
 
 
 const App = () => {
@@ -28,6 +29,9 @@ const App = () => {
   const { getFilter } = SchFilterService;
 
   const user = useSelector(state => state.userAuth.user)
+  const sch = useSelector(state => state.sch)
+
+
   axios.interceptors.request.use(function (config) {
     // Do something before request is sent
     if (user) {
@@ -51,49 +55,36 @@ const App = () => {
     return Promise.reject(error);
   });
 
-  const modifyJson = (jsonArr) => {
-    return jsonArr.map(
-      obj => {
-        return {
-          "_id": obj._id,
-          "label": obj.name,
-          "value": obj.name,
-          "indexId": obj.indexId
-        }
-      }
-    );
 
-  }
-
-  const modifyRegion = (jsonArr) => {
-    return jsonArr.map(
-      obj => {
-        return {
-          "_id": obj._id,
-          "label": obj.value,
-          "value": obj.name,
-        }
-      }
-    );
-
-  }
 
   useEffect(() => {
     const fetchData = async () => {
       await getFilter("fromwhere").then((res) => {
-        dispatch(setFromWhere(modifyJson(res?.data)))
+        dispatch(setFromWhere(res?.data))
       })
       await getFilter("educationtype").then((res) => {
-        dispatch(setEducationType(modifyJson(res?.data)))
+        dispatch(setEducationType(res?.data))
       })
       await getFilter("authority").then((res) => {
-        dispatch(setAuthority(modifyJson(res?.data)))
+        dispatch(setAuthority(res?.data))
       })
       await getFilter("caste").then((res) => {
-        dispatch(setCaste(modifyJson(res?.data)))
+        dispatch(setCaste(res?.data))
       })
       await getFilter("region").then((res) => {
-        dispatch(setRegion(modifyRegion(res?.data)))
+        dispatch(setRegion(res?.data))
+      })
+      await getFilter("interest").then((res) => {
+        dispatch(setInterestList(res?.data))
+      })
+      await getFilter("branch").then((res) => {
+        dispatch(setBranchList(res?.data))
+      })
+      await getFilter("stream").then((res) => {
+        dispatch(setStreamList(res?.data))
+      })
+      await getFilter("examlist").then((res) => {
+        dispatch(setExamList(res?.data))
       })
     }
 
@@ -110,6 +101,11 @@ const App = () => {
         <PrivateRoute exact path="/add-schlorship" component={AddSchScreen} />
         <PrivateRoute exact path="/edit-post/:newsId" component={EditPostScreen} />
         <PrivateRoute exact path="/add-slide" component={AddSliderScreen} />
+        <PrivateRoute exact path="/form/:type" component={FormScreen} />
+  
+
+
+
 
         <PrivateRoute exact path="/" component={PrivateScreen} />
         <Route exact path="/login" component={LoginScreen} />

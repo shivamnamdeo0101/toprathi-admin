@@ -5,9 +5,13 @@ const CasteRef = new mongoose.Schema({
         type: Number,
         default:Date.now()
     },
-    name:{
+    value:{
         type: String,
         required: [true, "Please provide value"],
+    },
+    label:{
+        type: String,
+        required: [true, "Please provide label"],
     },
     indexId:{
         type: Number,

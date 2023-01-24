@@ -1,4 +1,5 @@
 const Schlorship = require("../models/Schlorship");
+const mongoose = require("mongoose");
 
 exports.addSch = async (req, res, next) => {
     try {
@@ -34,6 +35,70 @@ exports.getAllSch = async (req, res, next) => {
                     ]
                 }
             },
+           
+            // {
+            //     $lookup:
+            //     {
+            //         from: "fromwheres",
+            //         localField: "fromWhere",
+            //         foreignField: "indexId",
+            //         as: "fromWhere"
+            //     }
+            // },
+            // {
+            //     $lookup:
+            //     {
+            //         from: "authorities",
+            //         localField: "authority",
+            //         foreignField: "indexId",
+            //         as: "authority"
+            //     }
+            // },
+            // {
+            //     $lookup:
+            //     {
+            //         from: "castes",
+            //         localField: "caste",
+            //         foreignField: "indexId",
+
+            //         as: "caste"
+            //     }
+            // },
+            // {
+            //     $lookup:
+            //     {
+            //         from: "educationtypes",
+            //         localField: "educationType",
+            //         foreignField: "indexId",
+            //         as: "educationType"
+            //     }
+            // },
+
+            {$sort:{'updateAt':-1}}
+
+
+        ])
+
+
+
+        res.status(201).json({
+            success: true,
+            length: list.length,
+            data: list
+
+
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
+
+exports.getSchById = async (req, res, next) => {
+    try {
+        let id = mongoose.Types.ObjectId(req.params.schId);
+        const list = await Schlorship.aggregate([
+            { $match: { _id: id } },
            
             {
                 $lookup:
@@ -72,14 +137,22 @@ exports.getAllSch = async (req, res, next) => {
                     as: "educationType"
                 }
             },
+            {
+                $lookup:
+                {
+                    from: "regions",
+                    localField: "region",
+                    foreignField: "_id",
+                    as: "region"
+                }
+            },
 
             {$sort:{'updateAt':-1}}
 
 
         ])
 
-
-
+    
         res.status(201).json({
             success: true,
             length: list.length,

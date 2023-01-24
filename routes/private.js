@@ -9,7 +9,7 @@ const {updateUser,getUserById, saveCollectionToUser, notify, remCollectionToUser
 const { protect } = require("../middleware/auth");
 const { sendPushNotification } = require("../utils/sendPushNotification");
 const { addFilter, getFilter } = require("../controllers/filter");
-const { addSch, getAllSch, getAllSchAdmin } = require("../controllers/schlorship");
+const { addSch, getAllSch, getAllSchAdmin, getSchById } = require("../controllers/schlorship");
 
 
 
@@ -39,7 +39,6 @@ router.route("/insight").get(getInsight);
 
 router.route("/search/:query/:pageNo").get(searchNews);
 router.route("/search-title/:query").get(searchTitle);
-
 
 
 
@@ -83,6 +82,7 @@ getFilter
 
 router.route("/sch-add").post(addSch)
 router.route("/sch-getall").post(getAllSch)
+router.route("/sch/:schId").get(getSchById)
 
 
 

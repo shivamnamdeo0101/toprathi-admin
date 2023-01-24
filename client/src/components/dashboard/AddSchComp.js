@@ -5,6 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import Select from 'react-select';
 import SchService from '../../service/api/SchService';
+import EditorComp from './EditorComp';
 
 function AddSchComp() {
     const history = useHistory();
@@ -21,6 +22,10 @@ function AddSchComp() {
 
 
     const onSubmit = async (data) => {
+
+        console.log(data)
+
+        return
         const obj = {
             ...data, fromWhere: getArrIndex(data?.fromWhere),
             educationType: getArrIndex(data?.educationType),
@@ -52,6 +57,8 @@ function AddSchComp() {
 
     return (
         <div>
+            <EditorComp />
+
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className='post_form_comp'>
                     <label>Schlorship Name</label>
@@ -95,6 +102,26 @@ function AddSchComp() {
                         )}
                     />
                     {errors.fromWhere && <span className='error'>From Where is required</span>}
+                </div>
+                <div className='post_form_comp'>
+                    <label>Awards</label>
+                    <Controller
+                        control={control}
+                        name="awards"
+                        render={({
+                            field: { onChange, onBlur, value, name, ref },
+                        }) => (
+                            <textarea
+                                options={sch?.fromWhere}
+                                onChange={onChange}
+                                onBlur={onBlur}
+                                value={value}
+                                name={name}
+                                ref={ref}
+                            />
+                        )}
+                    />
+                    {errors.awards && <span className='error'>Awards Where is required</span>}
                 </div>
                 <div className='post_form_comp'>
                     <label>Education type</label>

@@ -15,6 +15,19 @@ export default {
                 return error.response;
             });
     },
+    addFilter: async function (payload) {
+        return axios.request({
+            method: 'post',
+            url: `${endPoint}private/filter-add`,
+            data: payload
+        })
+            .then((res) => {
+                return res.data;
+            })
+            .catch((error) => {
+                return error.response;
+            });
+    },
 
 
 };

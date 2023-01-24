@@ -5,14 +5,19 @@ const RegionRef = new mongoose.Schema({
         type: Number,
         default:Date.now()
     },
-    name:{
-        type: String,
-        required: [true, "Please provide value"],
-    },
     value:{
         type: String,
         required: [true, "Please provide value"],
     },
+    label:{
+        type: String,
+        required: [true, "Please provide label"],
+    },
+    indexId:{
+        type: Number,
+        required: [true, "Please provide IndexId"],
+        unique: true
+    }
     
 });
 const Region = mongoose.model("Region", RegionRef);

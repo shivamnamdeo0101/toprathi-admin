@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 
-const AuthorityRef = new mongoose.Schema({
+const ExamListRef = new mongoose.Schema({
     timestamp:{
         type: Number,
-        
         default:Date.now()
     },
     value:{
@@ -20,6 +19,7 @@ const AuthorityRef = new mongoose.Schema({
         unique: true
     }
 });
-const Authority = mongoose.model("Authority", AuthorityRef);
+const ExamList = mongoose.model("ExamList", ExamListRef);
 
-module.exports = Authority;
+module.exports = ExamList;
+

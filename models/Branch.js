@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 
-const AuthorityRef = new mongoose.Schema({
+const BranchRef = new mongoose.Schema({
     timestamp:{
         type: Number,
-        
         default:Date.now()
     },
     value:{
@@ -19,7 +18,8 @@ const AuthorityRef = new mongoose.Schema({
         required: [true, "Please provide IndexId"],
         unique: true
     }
+    
 });
-const Authority = mongoose.model("Authority", AuthorityRef);
+const Branch = mongoose.model("Branch", BranchRef);
 
-module.exports = Authority;
+module.exports = Branch;
