@@ -2,11 +2,10 @@ import axios from 'axios';
 import { endPoint } from '../../utils/endPoint';
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  getSchAllAdmin: async function (payload) {
+  getSchAllAdmin: async function () {
     return axios.request({
-      method: 'post',
+      method: 'get',
       url: `${endPoint}private/admin-sch-getall`,
-      data: payload,
     })
       .then((res) => {
         return res.data;

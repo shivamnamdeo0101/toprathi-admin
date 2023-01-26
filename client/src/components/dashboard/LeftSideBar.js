@@ -42,6 +42,11 @@ function LeftSideBar() {
           <div className='left_side_menu_comp' onClick={()=>history.push("/form/caste")}>
             <h6>Caste List</h6>
           </div>
+          <div className='left_side_menu_comp' onClick={()=>history.push("/form/fromwhere")}>
+            <h6>From Where</h6>
+          </div>
+
+          
 
         </div>
 

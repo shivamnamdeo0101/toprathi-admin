@@ -23,56 +23,24 @@ exports.getAllSch = async (req, res, next) => {
     try {
 
         // const list = await Schlorship.find({})
-
+        
         const list = await Schlorship.aggregate([
-            {
-                $match: {
-                    $and: [
-                        { $expr: { $in: [req.body.fromWhere, '$fromWhere'] } },
-                        { $expr: { $in: [req.body.caste, '$caste'] } },
-                        { $expr: { $in: [req.body.educationType, '$educationType'] } },
-                        { $expr: { $in: [req.body.authority, '$authority'] } },
-                    ]
-                }
-            },
+            // {
+            //     $match: {
+            //         $and: [
+            //             // { $expr: { $in: [req.body.fromWhere, '$fromWhere'] } },
+            //             // { $expr: { $in: [req.body.caste, '$caste'] } },
+            //             // { $expr: { $in: [req.body.educationType, '$educationType'] } },
+            //             // { $expr: { $in: [req.body.authority, '$authority'] } },
+            //             // { $expr: { $in: [req.body.gender, '$gender'] } },
+            //             { $expr: {  'annualIncome' : { $elemMatch: { $lt: req.body.annualIncome } } } },
+            //             { $expr: {  'annualIncome' : { $elemMatch: {  $gt: req.body.annualIncome } } } },
+            //         ]
+            //     }
+            // },
            
-            // {
-            //     $lookup:
-            //     {
-            //         from: "fromwheres",
-            //         localField: "fromWhere",
-            //         foreignField: "indexId",
-            //         as: "fromWhere"
-            //     }
-            // },
-            // {
-            //     $lookup:
-            //     {
-            //         from: "authorities",
-            //         localField: "authority",
-            //         foreignField: "indexId",
-            //         as: "authority"
-            //     }
-            // },
-            // {
-            //     $lookup:
-            //     {
-            //         from: "castes",
-            //         localField: "caste",
-            //         foreignField: "indexId",
+           
 
-            //         as: "caste"
-            //     }
-            // },
-            // {
-            //     $lookup:
-            //     {
-            //         from: "educationtypes",
-            //         localField: "educationType",
-            //         foreignField: "indexId",
-            //         as: "educationType"
-            //     }
-            // },
 
             {$sort:{'updateAt':-1}}
 
@@ -137,6 +105,7 @@ exports.getSchById = async (req, res, next) => {
                     as: "educationType"
                 }
             },
+            
             {
                 $lookup:
                 {
@@ -147,9 +116,7 @@ exports.getSchById = async (req, res, next) => {
                 }
             },
 
-            {$sort:{'updateAt':-1}}
-
-
+          
         ])
 
     

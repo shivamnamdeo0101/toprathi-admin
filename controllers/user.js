@@ -97,6 +97,32 @@ exports.setUserSuccessRegister = async (req, res, next) => {
   }
 };
 
+exports.setReadNotifyTrue = async (req, res, next) => {
+  const { userId, notifyId} = req.body;
+  let uId = mongoose.Types.ObjectId(userId);
+  let nId = mongoose.Types.ObjectId(notifyId);
+
+  try {
+
+    const user = await User.findById(uId, {'user.notifications._id': nId } );
+    // const res =  await User.findOne(
+    //   { 'users._id': uId, 'users.notifications._id': nId },
+    //   {
+    //     $set: {
+    //       'users.notifications.$.readStatus': true,
+        
+    //   } }, { $new: true });
+
+    res.status(200).json({
+      success: true,
+      data:user,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
 
 exports.updateNotifyToken = async (req, res, next) => {
 

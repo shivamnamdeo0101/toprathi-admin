@@ -5,7 +5,7 @@ const { addNews,getNews,addSlide,getSlide,editNews,getNewsById,remNewsById,getSl
 
 const {getNewsCache} = require("../middleware/redisCache");
 
-const {updateUser,getUserById, saveCollectionToUser, notify, remCollectionToUser, getCollectionToUser, getProfileCollection, updateProfileImg, getProfileImg, updateNotifyToken, setUserSuccessRegister, getUserNotifications} = require("../controllers/user")
+const {updateUser,getUserById, saveCollectionToUser, notify, remCollectionToUser, getCollectionToUser, getProfileCollection, updateProfileImg, getProfileImg, updateNotifyToken, setUserSuccessRegister, getUserNotifications, setReadNotifyTrue} = require("../controllers/user")
 const { protect } = require("../middleware/auth");
 const { sendPushNotification } = require("../utils/sendPushNotification");
 const { addFilter, getFilter } = require("../controllers/filter");
@@ -60,6 +60,8 @@ router.route("/notify-token-update").put(updateNotifyToken);
 router.route("/notify").post(notify);
 
 router.route("/success/:userId").put(setUserSuccessRegister);
+router.route("/notification").post(setReadNotifyTrue);
+
 
 
 
@@ -88,7 +90,7 @@ router.route("/sch/:schId").get(getSchById)
 
 //Admin
 
-router.route("/admin-sch-getall").post(getAllSchAdmin)
+router.route("/admin-sch-getall").get(getAllSchAdmin)
 
 
 

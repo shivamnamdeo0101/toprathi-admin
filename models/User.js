@@ -81,6 +81,7 @@ const UserSchema = new mongoose.Schema({
       type: Number,
     }
   },
+  
   schFilter:{
     type:mongoose.SchemaTypes.Mixed,
   },

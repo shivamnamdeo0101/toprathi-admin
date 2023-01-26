@@ -29,6 +29,10 @@ const SchlorshipRef = new mongoose.Schema({
         }
     ],
     annualIncome: {
+        type: Number,
+        default: Date.now()
+    },
+    percentage: {
         min: {
             type: Number,
         },
@@ -37,7 +41,7 @@ const SchlorshipRef = new mongoose.Schema({
         },
 
     },
-    percentage: {
+    age: {
         min: {
             type: Number,
         },
@@ -68,6 +72,12 @@ const SchlorshipRef = new mongoose.Schema({
         {
             type: Number,
             ref: 'FromWhere'
+        },
+    ],
+    examList: [
+        {
+            type: Number,
+            ref: 'examList'
         },
     ],
 });

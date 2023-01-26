@@ -14,7 +14,7 @@ class EditorComp extends Component {
         return (
             <div className="App">
                 <CKEditorContext context={ Context }>
-                    <h2>Using the CKeditor 5 context feature in React</h2>
+                    <h2>Add Schlorship</h2>
                     <CKEditor
                         editor={ ClassicEditor }
                         config={ {

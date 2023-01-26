@@ -20,7 +20,7 @@ function FormComp({ type, list }) {
             indexId = list?.length + 1
         }
 
-        temp = {...data,indexId:indexId,type:type,value:data?.label}
+        temp = {...data,indexId:indexId,type:type,value:data?.label?.toLowerCase()}
         
         await addFilter(temp,type).then((res)=>{
             console.log(res)

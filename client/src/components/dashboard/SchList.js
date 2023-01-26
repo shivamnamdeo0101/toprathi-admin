@@ -8,7 +8,7 @@ function SchList() {
     
     useEffect(() => {
       const fetchData = async ()=>{
-        await getSchAllAdmin("").then((res)=>{
+        await getSchAllAdmin().then((res)=>{
             setlist(res?.data)
         })
       }

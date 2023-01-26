@@ -290,3 +290,8 @@ body {
   overflow-y: scroll;
   height: 100vh;
 }
+
+.custom_arr_form{
+  background-color:"#ccc";
+  margin:10;
+}
