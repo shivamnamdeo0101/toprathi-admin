@@ -22,6 +22,8 @@ function FormScreen() {
         "examlist":sch?.examlist,
         "branch":sch?.branch,
         "stream":sch?.stream,
+        "annualincome":sch?.annualIncome,
+        "percentage":sch?.percentage,
     }
 
    

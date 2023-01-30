@@ -8,7 +8,9 @@ const initialState = {
     interest:[],
     branch:[],
     stream:[],
-    examlist:[]
+    examlist:[],
+    percentage:[],
+    annualIncome:[]
 };
 export const SchFilterSlice = createSlice({
     name: 'sch',
@@ -42,6 +44,13 @@ export const SchFilterSlice = createSlice({
         setStreamList: (state, action) => {
             state.stream = action.payload;
         },
+        setPercentageList: (state, action) => {
+            state.percentage = action.payload;
+        },
+        setAnnualIncomeList: (state, action) => {
+            state.annualIncome = action.payload;
+        },
+
 
         flushAuthData: (state) => {
             localStorage.clear();
@@ -49,6 +58,6 @@ export const SchFilterSlice = createSlice({
         },
     },
 });
-export const { setFromWhere,setEducationType,setCaste,setAuthority,setRegion,setExamList,setInterestList,setBranchList,setStreamList } = SchFilterSlice.actions;
+export const { setFromWhere,setEducationType,setPercentageList,setAnnualIncomeList, setCaste,setAuthority,setRegion,setExamList,setInterestList,setBranchList,setStreamList } = SchFilterSlice.actions;
 
 export default SchFilterSlice.reducer;

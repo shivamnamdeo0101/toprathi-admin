@@ -43,16 +43,16 @@ exports.updateUser = async (req, res, next) => {
 exports.getUserNotifications = async (req, res, next) => {
   try {
     let id = mongoose.Types.ObjectId(req.params.userId);
-    const size = 12 ; const pageNo = req.params.pageNo;
+    const size = 12; const pageNo = req.params.pageNo;
     const skip = size * (pageNo - 1);
-    
-  
+
+
     const list = await User.aggregate([
       { $match: { _id: id } },
       { $unwind: "$notifications" },
       {
         $lookup: {
-          from: "notifications",  
+          from: "notifications",
           localField: "notifications.notifyId",
           foreignField: "_id",
           as: "notifications_"
@@ -60,7 +60,7 @@ exports.getUserNotifications = async (req, res, next) => {
 
       },
       { $unwind: { path: "$notifications_" } },
-      { $project: { _id: 0, notifyId: '$notifications.notifyId', refId: '$notifications.refId', timestamp: '$notifications_.timestamp', title: '$notifications_.text',content: '$notifications_.text',  image: '$notifications_.image', readStatus: '$notifications.readStatus' } },
+      { $project: { _id: 0, notifyId: '$notifications.notifyId', refId: '$notifications.refId', timestamp: '$notifications_.timestamp', title: '$notifications_.text', content: '$notifications_.text', image: '$notifications_.image', readStatus: '$notifications.readStatus' } },
       { $sort: { timestamp: -1 } },
       { $skip: skip },
       { $limit: size }
@@ -98,24 +98,30 @@ exports.setUserSuccessRegister = async (req, res, next) => {
 };
 
 exports.setReadNotifyTrue = async (req, res, next) => {
-  const { userId, notifyId} = req.body;
+  const { userId, notifyId } = req.body;
   let uId = mongoose.Types.ObjectId(userId);
   let nId = mongoose.Types.ObjectId(notifyId);
 
   try {
 
-    const user = await User.findById(uId, {'user.notifications._id': nId } );
-    // const res =  await User.findOne(
-    //   { 'users._id': uId, 'users.notifications._id': nId },
-    //   {
-    //     $set: {
-    //       'users.notifications.$.readStatus': true,
-        
-    //   } }, { $new: true });
+    const user  = await User.updateOne(
+      { '_id': uId , 'notifications._id': nId,},
+      { $set:  { 'notifications.$.readStatus': true }},
+      (err, result) => {
+        if (err) {
+          res.status(500)
+          .json({ error: 'Unable to update competitor.', });
+        } else {
+          res.status(200)
+          .json(result);
+        }
+     }
+    );
+
 
     res.status(200).json({
       success: true,
-      data:user,
+      data: user,
     });
   } catch (err) {
     next(err);

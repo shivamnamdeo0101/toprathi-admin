@@ -12,6 +12,8 @@ function AddSchComp() {
     const history = useHistory();
     const { control, register, handleSubmit, reset, getValues, setValue, watch, formState: { errors } } = useForm();
 
+    const [editoValue, seteditoValue] = useState("")
+
     const { addSchAdmin } = SchService;
     const [schDetails, setschDetails] = useState([
         { value: '', }
@@ -47,22 +49,20 @@ function AddSchComp() {
             examList: getArrIndex(data?.examList),
             gender: getArrObjValue(data?.gender),
             annualIncome: data?.ai_min,
-            percentage: {
-                min: data?.per_min,
-                max: data?.per_max
-            },
+            percentage: data?.per_min,
             age: {
                 min: data?.age_min,
                 max: data?.age_max
             },
-            schlorshipData: {
-                docRequired: docRequired,
-                impNotes: impNotes,
-                schDetails: schDetails
-            }
+            schlorshipData:editoValue
+            // schlorshipData: {
+            //     docRequired: docRequired,
+            //     impNotes: impNotes,
+            //     schDetails: schDetails
+            // }
         }
         await addSchAdmin(obj).then((res) => {
-            console.log(obj)
+            console.log(res,"res---------------->")
         })
         reset()
         alert("Schlorship Added")
@@ -73,9 +73,15 @@ function AddSchComp() {
 
     return (
         <div>
-            <EditorComp />
 
             <form onSubmit={handleSubmit(onSubmit)}>
+
+                <div className='post_form_comp'>
+                    <label>Schlorship Details</label>
+                    <EditorComp setValue={seteditoValue} value={editoValue} />
+
+                </div>
+                
                 <div className='post_form_comp'>
                     <label>Schlorship Name</label>
                     <input {...register("name", { required: true })} type="text" />
@@ -85,17 +91,26 @@ function AddSchComp() {
 
                 <div className='post_form_comp'>
                     <label>Annual Income</label>
-                    <input {...register("ai_min", { required: true })} type="number" placeholder="Minimum Annual Income" />
-                    {errors.ai_min && <span className='error'>Minimum annual income is required</span>}
+                    <Controller
+                        control={control}
+                        name="annualIncome"
+                        render={({
+                            field: { onChange, onBlur, value, name, ref },
+                        }) => (
+                            <Select
+                                options={sch?.annualIncome}
+                                onChange={onChange}
+                                isMulti={true}
+                                onBlur={onBlur}
+                                value={value}
+                                name={name}
+                                ref={ref}
+                            />
+                        )}
+                    />
+                    {errors.annualIncome && <span className='error'>Annual Income Type is required</span>}
                 </div>
 
-                <div className='post_form_comp'>
-                    <label>Age Limit</label>
-                    <input {...register("age_min", { required: true })} type="number" placeholder="Minimum Age Income" />
-                    {errors.age_min && <span className='error'>Minimum age income is required</span>}
-                    <input {...register("age_max", { required: true })} type="number" placeholder="Maximum Age Income" />
-                    {errors.age_max && <span className='error'>Maximum age income is required</span>}
-                </div>
 
                 <div className='post_form_comp'>
                     <label>Exams List</label>
@@ -120,13 +135,15 @@ function AddSchComp() {
                 </div>
 
 
+
+
+
                 <div className='post_form_comp'>
-                    <label>Percentage</label>
-                    <input {...register("per_min", { required: true })} type="number" placeholder="Minimum Percentage" />
-                    {errors.ai_min && <span className='error'>Minimum Percentage is required</span>}
-                    <input {...register("per_max", { required: true })} type="number" placeholder="Maximum Percentage" />
-                    {errors.ai_max && <span className='error'>Maximum Percentage is required</span>}
+                    <label>Min Percentage Is Required</label>
+                    <input {...register("per_min", { required: true })} type="number" />
+                    {errors.per_min && <span className='error'>Percentage is required</span>}
                 </div>
+
 
                 <div className='post_form_comp'>
                     <label>From Where</label>
@@ -149,26 +166,7 @@ function AddSchComp() {
                     />
                     {errors.fromWhere && <span className='error'>From Where is required</span>}
                 </div>
-                <div className='post_form_comp'>
-                    <label>Awards</label>
-                    <Controller
-                        control={control}
-                        name="awards"
-                        render={({
-                            field: { onChange, onBlur, value, name, ref },
-                        }) => (
-                            <textarea
-                                options={sch?.fromWhere}
-                                onChange={onChange}
-                                onBlur={onBlur}
-                                value={value}
-                                name={name}
-                                ref={ref}
-                            />
-                        )}
-                    />
-                    {errors.awards && <span className='error'>Awards Where is required</span>}
-                </div>
+
                 <div className='post_form_comp'>
                     <label>Education type</label>
                     <Controller
@@ -275,7 +273,7 @@ function AddSchComp() {
                     {errors.gender && <span className='error'>Gender is required</span>}
                 </div>
 
-                <div className='post_form_comp'>
+                {/* <div className='post_form_comp'>
                     <CustomArrInput
                         setInputFields={setschDetails}
                         inputFields={schDetails}
@@ -304,7 +302,7 @@ function AddSchComp() {
                     />
                 </div>
 
-                
+ */}
 
                 <input type="submit" className='button' />
             </form>

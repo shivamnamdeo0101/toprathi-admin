@@ -149,3 +149,19 @@ exports.getAllSchAdmin = async (req, res, next) => {
         next(err);
     }
 };
+
+exports.csvFileToArray = async (req, res, next) => {
+    try {
+
+        const list = await Schlorship.find({}).sort({'addAt':-1})
+
+        res.status(201).json({
+            success: true,
+            length: list.length,
+            data: list
+        });
+        
+    } catch (err) {
+        next(err);
+    }
+  }

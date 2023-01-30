@@ -1,3 +1,4 @@
+const AnnualIncome = require("../models/AnnualIncome");
 const Authority = require("../models/Authority");
 const Branch = require("../models/Branch");
 const Caste = require("../models/Caste");
@@ -5,6 +6,7 @@ const EducationType = require("../models/EducationType");
 const ExamList = require("../models/ExamList");
 const FromWhere = require("../models/FromWhere");
 const Interest = require("../models/Interest");
+const Percentage = require("../models/Percentage");
 const Region = require("../models/Region");
 const Schlorship = require("../models/Schlorship");
 const Stream = require("../models/Stream");
@@ -36,6 +38,10 @@ exports.addFilter = async (req, res, next) => {
             data = await Stream.create(req.body);
         }else if(type === "branch"){
             data = await Branch.create(req.body);
+        }else if(type === "annualincome"){
+            data = await AnnualIncome.create(req.body);
+        }else if(type === "percentage"){
+            data = await Percentage.create(req.body);
         }
 
     
@@ -58,7 +64,7 @@ exports.getFilter = async (req, res, next) => {
     try {
 
         const type  = req.params.type;
-        let data;
+        let data = [];
         if(type == "authority"){
             data = await Authority.find({});
         }else if(type === "educationtype"){
@@ -77,13 +83,19 @@ exports.getFilter = async (req, res, next) => {
             data = await Branch.find({});
         }else if(type === "stream"){
             data = await Stream.find({});
+        }else if(type === "percentage"){
+            data = await Percentage.find({});
+        }else if(type === "annualincome"){
+            data = await AnnualIncome.find({});
         }
         
-
-    
+        if(data === []){
+            data = []
+        }
+        
         res.status(201).json({
             success: true,
-            length:data.length,
+            length:data?.length,
             data: data,
 
         });

@@ -28,19 +28,18 @@ const SchlorshipRef = new mongoose.Schema({
             ref: 'Caste'
         }
     ],
-    annualIncome: {
-        type: Number,
-        default: Date.now()
-    },
-    percentage: {
-        min: {
+    annualIncome: [
+        {
             type: Number,
-        },
-        max: {
+            ref: 'AnnualIncome'
+        }
+    ],
+    percentage: 
+        {
             type: Number,
-        },
-
-    },
+            ref: 'Percentage'
+        }
+    ,
     age: {
         min: {
             type: Number,

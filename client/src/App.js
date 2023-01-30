@@ -18,7 +18,7 @@ import EmailVerifyScreen from "./components/screens/EmailVerifyScreen";
 import AddSchScreen from "./components/screens/AddSchScreen";
 import SchFilterService from "./service/api/SchFilterService";
 import { useEffect } from 'react';
-import { setAuthority, setBranchList, setCaste, setEducationType, setExamList, setFromWhere, setInterestList, setRegion, setStreamList } from "./store/SchFilterSlice";
+import { setAnnualIncomeList, setAuthority, setBranchList, setCaste, setEducationType, setExamList, setFromWhere, setInterestList, setPercentageList, setRegion, setStreamList } from "./store/SchFilterSlice";
 import FormScreen from "./components/screens/FormScreen";
 
 
@@ -85,6 +85,14 @@ const App = () => {
       })
       await getFilter("examlist").then((res) => {
         dispatch(setExamList(res?.data))
+      })
+      await getFilter("percentage").then((res) => {
+        
+        dispatch(setPercentageList(res?.data))
+      })
+      await getFilter("annualincome").then((res) => {
+        console.log(res?.data)
+        dispatch(setAnnualIncomeList(res?.data))
       })
     }
 

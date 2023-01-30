@@ -9,7 +9,8 @@ const {updateUser,getUserById, saveCollectionToUser, notify, remCollectionToUser
 const { protect } = require("../middleware/auth");
 const { sendPushNotification } = require("../utils/sendPushNotification");
 const { addFilter, getFilter } = require("../controllers/filter");
-const { addSch, getAllSch, getAllSchAdmin, getSchById } = require("../controllers/schlorship");
+const { addSch, getAllSch, getAllSchAdmin, getSchById, csvFileToArray } = require("../controllers/schlorship");
+const { googleSignin, googleSignup } = require("../controllers/auth");
 
 
 
@@ -91,6 +92,14 @@ router.route("/sch/:schId").get(getSchById)
 //Admin
 
 router.route("/admin-sch-getall").get(getAllSchAdmin)
+
+
+
+//Google Signup
+
+router.route("/google-login").post(googleSignin)
+router.route("/google-register").post(googleSignup)
+
 
 
 

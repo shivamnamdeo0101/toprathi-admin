@@ -85,6 +85,34 @@ exports.login = async (req, res, next) => {
 
 
 // @desc    Register user
+exports.googleSignup = async (req, res, next) => {
+
+  try {
+    const user = await User.findOne({"email":req.body.email}).select(["_id","email","emailVerified","profile_img","notifyToken","isSuccess","joinedOn","address","education","username"])
+    if(!user){
+      user = await User.create(req.body);
+    }
+    
+    sendToken(user, 200, res);
+  } catch (err) {
+    next(err);
+  }
+};
+exports.googleSignin= async (req, res, next) => {
+  
+  try {
+    const user = await User.findOne({"email":req.body.email}).select(["_id","email","emailVerified","profile_img","notifyToken","isSuccess","joinedOn","address","education","username"])
+    if(!user){
+      user = await User.create(req.body);
+    }
+    sendToken(user, 200, res);
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+// @desc    Register user
 exports.register = async (req, res, next) => {
   
   try {

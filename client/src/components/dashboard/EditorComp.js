@@ -1,49 +1,39 @@
-// This sample assumes that the application is using a CKEditor 5 editor built from source.
-import React, { Component } from 'react';
-import { CKEditor, CKEditorContext } from '@ckeditor/ckeditor5-react';
+import React, { useRef } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // import the styles
 
-import Context from '@ckeditor/ckeditor5-core/src/context';
-import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor';
-import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
-import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
-import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
-import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
+function EditorComp({setValue,value}) {
+    const fonts = ['Times New Roman', 'Comic Sans MS', 'Arial', 'Courier New', 'Georgia', 'Impact', 'Lucida Console','Open Sans'];
 
-class EditorComp extends Component {
-    render() {
-        return (
-            <div className="App">
-                <CKEditorContext context={ Context }>
-                    <h2>Add Schlorship</h2>
-                    <CKEditor
-                        editor={ ClassicEditor }
-                        config={ {
-                            plugins: [ Paragraph, Bold, Italic, Essentials ],
-                            toolbar: [ 'bold', 'italic' ]
-                        } }
-                        data="<p>Hello from the first editor working with the context!</p>"
-                        onReady={ editor => {
-                            // You can store the "editor" and use when it is needed.
-                            console.log( 'Editor1 is ready to use!', editor );
-                        } }
-                    />
+    const toolbarOptions = [
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        ['link'],
+        [{ 'color': [] }, { 'background': [] }],
+       
+        [{ 'font': [] }],
+        [{ 'align': [] }],
+        ['clean']
+    ];
 
-                    <CKEditor
-                        editor={ ClassicEditor }
-                        config={ {
-                            plugins: [ Paragraph, Bold, Italic, Essentials ],
-                            toolbar: [ 'bold', 'italic' ]
-                        } }
-                        data="<p>Hello from the first editor working with the context!</p>"
-                        onReady={ editor => {
-                            // You can store the "editor" and use when it is needed.
-                            console.log( 'Editor1 is ready to use!', editor );
-                        } }
-                    />
-                </CKEditorContext>
-            </div>
-        );
-    }
+    
+    const quillRef = useRef(null);
+
+    const handleChange = (v) => {
+        setValue(v);
+    };
+
+    return (
+        <div>
+            <ReactQuill
+                ref={quillRef}
+                value={value}
+                onChange={handleChange}
+                modules={{ toolbar: toolbarOptions }}
+            />
+        </div>
+    );
 }
 
 export default EditorComp;

@@ -112,7 +112,7 @@ function AddPostComp() {
             <div className='add_post_form_head'>
                 <h2>Add Post</h2>
             </div>
-
+            
 
             <div className='add_post_form'>
                 <form onSubmit={handleSubmit(onSubmit)}>
