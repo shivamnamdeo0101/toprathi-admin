@@ -2,13 +2,13 @@ import React, { useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // import the styles
 
-function EditorComp({setValue,value}) {
+function EditorComp({setValue,value,defaultValue}) {
     const fonts = ['Times New Roman', 'Comic Sans MS', 'Arial', 'Courier New', 'Georgia', 'Impact', 'Lucida Console','Open Sans'];
 
     const toolbarOptions = [
         [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-        ['bold', 'italic', 'underline', 'strike'],
-        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        ['bold', 'italic', 'underline', 'strike','blockquote'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet'}],
         ['link'],
         [{ 'color': [] }, { 'background': [] }],
        
@@ -17,7 +17,7 @@ function EditorComp({setValue,value}) {
         ['clean']
     ];
 
-    
+
     const quillRef = useRef(null);
 
     const handleChange = (v) => {
@@ -30,6 +30,7 @@ function EditorComp({setValue,value}) {
                 ref={quillRef}
                 value={value}
                 onChange={handleChange}
+               
                 modules={{ toolbar: toolbarOptions }}
             />
         </div>

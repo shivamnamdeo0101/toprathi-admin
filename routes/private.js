@@ -95,11 +95,14 @@ router.route("/admin-sch-getall").get(getAllSchAdmin)
 
 
 
+
 //Google Signup
 
 router.route("/google-login").post(googleSignin)
 router.route("/google-register").post(googleSignup)
 
+
+router.route("/check").post(googleSignin)
 
 
 

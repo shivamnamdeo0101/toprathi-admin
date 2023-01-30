@@ -9,6 +9,8 @@ import DashboardComp from "../dashboard/DashboardComp";
 import AddPostComp from "../dashboard/AddPostComp";
 import AddSchComp from "../dashboard/AddSchComp";
 import SchList from "../dashboard/SchList";
+import { useParams } from "react-router-dom";
+import SchService from "../../service/api/SchService";
 
 
 const AddSchScreen = ({ history }) => {
@@ -17,7 +19,20 @@ const AddSchScreen = ({ history }) => {
     const [privateData, setPrivateData] = useState("");
     const dispatch = useDispatch();
     const user = useSelector(state => state.userAuth.user);
+    const [schData, setschData] = useState({})
+    const {schId} = useParams();
 
+    const {getSchById} = SchService;
+
+    useEffect(() => {
+      const fetchData =async ()=>{
+        await getSchById(schId).then((res)=>{
+            setschData(res?.data?.data[0])
+        })
+      }
+     // fetchData()
+    }, [])
+    
 
     return error ? (
         <span className="error-message">{error}</span>

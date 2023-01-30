@@ -91,7 +91,6 @@ const App = () => {
         dispatch(setPercentageList(res?.data))
       })
       await getFilter("annualincome").then((res) => {
-        console.log(res?.data)
         dispatch(setAnnualIncomeList(res?.data))
       })
     }
@@ -107,6 +106,7 @@ const App = () => {
       <div className="app">
         <PrivateRoute exact path="/add-post" component={AddPostScreen} />
         <PrivateRoute exact path="/add-schlorship" component={AddSchScreen} />
+        <PrivateRoute exact path="/edit-schlorship/:schId" component={AddSchScreen} />
         <PrivateRoute exact path="/edit-post/:newsId" component={EditPostScreen} />
         <PrivateRoute exact path="/add-slide" component={AddSliderScreen} />
         <PrivateRoute exact path="/form/:type" component={FormScreen} />

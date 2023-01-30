@@ -25,19 +25,18 @@ exports.getAllSch = async (req, res, next) => {
         // const list = await Schlorship.find({})
         
         const list = await Schlorship.aggregate([
-            // {
-            //     $match: {
-            //         $and: [
-            //             // { $expr: { $in: [req.body.fromWhere, '$fromWhere'] } },
-            //             // { $expr: { $in: [req.body.caste, '$caste'] } },
-            //             // { $expr: { $in: [req.body.educationType, '$educationType'] } },
-            //             // { $expr: { $in: [req.body.authority, '$authority'] } },
-            //             // { $expr: { $in: [req.body.gender, '$gender'] } },
-            //             { $expr: {  'annualIncome' : { $elemMatch: { $lt: req.body.annualIncome } } } },
-            //             { $expr: {  'annualIncome' : { $elemMatch: {  $gt: req.body.annualIncome } } } },
-            //         ]
-            //     }
-            // },
+            {
+                $match: {
+                    $and: [
+                        { $expr: { $in: [req.body.fromWhere, '$fromWhere'] } },
+                        { $expr: { $in: [req.body.caste, '$caste'] } },
+                        { $expr: { $in: [req.body.educationType, '$educationType'] } },
+                        { $expr: { $in: [req.body.authority, '$authority'] } },
+                        { $expr: { $in: [req.body.gender, '$gender'] } },
+                        {percentage: { $lte: req.body.percentage }}
+                    ]
+                }
+            },
            
            
 
@@ -64,7 +63,11 @@ exports.getAllSch = async (req, res, next) => {
 
 exports.getSchById = async (req, res, next) => {
     try {
+
+
+
         let id = mongoose.Types.ObjectId(req.params.schId);
+
         const list = await Schlorship.aggregate([
             { $match: { _id: id } },
            
@@ -133,6 +136,9 @@ exports.getSchById = async (req, res, next) => {
 };
 
 
+
+
+
 exports.getAllSchAdmin = async (req, res, next) => {
     try {
 
@@ -149,19 +155,3 @@ exports.getAllSchAdmin = async (req, res, next) => {
         next(err);
     }
 };
-
-exports.csvFileToArray = async (req, res, next) => {
-    try {
-
-        const list = await Schlorship.find({}).sort({'addAt':-1})
-
-        res.status(201).json({
-            success: true,
-            length: list.length,
-            data: list
-        });
-        
-    } catch (err) {
-        next(err);
-    }
-  }

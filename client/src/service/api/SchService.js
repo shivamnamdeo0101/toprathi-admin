@@ -14,6 +14,19 @@ export default {
         return error.response;
       });
   },
+
+  getSchById: async function (payload) {
+    return axios.request({
+      method: 'get',
+      url: `${endPoint}private/sch/${payload}`,
+    })
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        return error.response;
+      });
+  },
   addSchAdmin: async function (payload) {
     return axios.request({
       method: 'post',

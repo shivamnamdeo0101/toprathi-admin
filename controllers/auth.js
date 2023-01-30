@@ -6,6 +6,7 @@ const ejs = require('ejs');
 const path = require("path");
 
 
+const userFields = ["_id","email","emailVerified","profile_img","notifyToken","isSuccess","joinedOn","address","education","username"]
 
 
 
@@ -84,13 +85,14 @@ exports.login = async (req, res, next) => {
 };
 
 
+
 // @desc    Register user
 exports.googleSignup = async (req, res, next) => {
 
   try {
-    const user = await User.findOne({"email":req.body.email}).select(["_id","email","emailVerified","profile_img","notifyToken","isSuccess","joinedOn","address","education","username"])
+    let user = await User.findOne({"email":req.body.email}).select(userFields)
     if(!user){
-      user = await User.create(req.body);
+      user = await User.create(req.body)
     }
     
     sendToken(user, 200, res);
@@ -101,9 +103,9 @@ exports.googleSignup = async (req, res, next) => {
 exports.googleSignin= async (req, res, next) => {
   
   try {
-    const user = await User.findOne({"email":req.body.email}).select(["_id","email","emailVerified","profile_img","notifyToken","isSuccess","joinedOn","address","education","username"])
+    let user = await User.findOne({"email":req.body.email}).select(userFields)
     if(!user){
-      user = await User.create(req.body);
+      user = await User.create(req.body)
     }
     sendToken(user, 200, res);
   } catch (err) {

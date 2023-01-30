@@ -50,11 +50,12 @@ function AddSchComp() {
             gender: getArrObjValue(data?.gender),
             annualIncome: data?.ai_min,
             percentage: data?.per_min,
-            age: {
-                min: data?.age_min,
-                max: data?.age_max
-            },
-            schlorshipData:editoValue
+            schlorshipData:editoValue,
+            // age: {
+            //     min: data?.age_min,
+            //     max: data?.age_max
+            // },
+            
             // schlorshipData: {
             //     docRequired: docRequired,
             //     impNotes: impNotes,
@@ -300,9 +301,9 @@ function AddSchComp() {
                         inputFields={awards}
                         heading={"Awards"}
                     />
-                </div>
+                </div> */}
 
- */}
+
 
                 <input type="submit" className='button' />
             </form>
