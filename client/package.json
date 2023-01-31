@@ -1,7 +1,7 @@
 {
   "name": "client",
   "version": "0.1.0",
-  "proxy": "https://toprathi-admin.onrender.com",
+  "proxy": "https://toprathi.onrender.com",
   "private": true,
   "engines": {
     "node": "16.15.1 ",
