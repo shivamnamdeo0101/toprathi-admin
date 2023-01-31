@@ -31,6 +31,27 @@ function AddSchComp() {
         { value: '', }
     ])
 
+    
+const genderList  = [
+    {
+      _id:0,
+      indexId:1,
+      value:"female",
+      label:"Female"
+    },
+    {
+      _id:1,
+      indexId:2,
+      value:"male",
+      label:"Male"
+    },
+    {
+      _id:2,
+      indexId:3,
+      value:"transgender",
+      label:"Transgender"
+    }
+  ]
 
 
     const sch = useSelector(state => state?.sch)
@@ -45,11 +66,11 @@ function AddSchComp() {
             educationType: getArrIndex(data?.educationType),
             caste: getArrIndex(data?.caste),
             authority: getArrIndex(data?.authority),
-            region: getArrObjId(data?.region),
+            region: getArrIndex(data?.region),
             examList: getArrIndex(data?.examList),
             gender: getArrObjValue(data?.gender),
-            annualIncome: data?.ai_min,
-            percentage: data?.per_min,
+            annualIncome: data?.annualIncome,
+            percentage: data?.percentage,
             schlorshipData:editoValue,
             // age: {
             //     min: data?.age_min,
@@ -90,27 +111,7 @@ function AddSchComp() {
                 </div>
 
 
-                <div className='post_form_comp'>
-                    <label>Annual Income</label>
-                    <Controller
-                        control={control}
-                        name="annualIncome"
-                        render={({
-                            field: { onChange, onBlur, value, name, ref },
-                        }) => (
-                            <Select
-                                options={sch?.annualIncome}
-                                onChange={onChange}
-                                isMulti={true}
-                                onBlur={onBlur}
-                                value={value}
-                                name={name}
-                                ref={ref}
-                            />
-                        )}
-                    />
-                    {errors.annualIncome && <span className='error'>Annual Income Type is required</span>}
-                </div>
+               
 
 
                 <div className='post_form_comp'>
@@ -136,13 +137,17 @@ function AddSchComp() {
                 </div>
 
 
-
+                <div className='post_form_comp'>
+                    <label>Max Annual Income</label>
+                    <input {...register("annualIncome", { required: true })} type="number" />
+                    {errors.annualIncome && <span className='error'>Annual Income is required</span>}
+                </div>
 
 
                 <div className='post_form_comp'>
                     <label>Min Percentage Is Required</label>
-                    <input {...register("per_min", { required: true })} type="number" />
-                    {errors.per_min && <span className='error'>Percentage is required</span>}
+                    <input {...register("percentage", { required: true })} type="number" />
+                    {errors.percentage && <span className='error'>Percentage is required</span>}
                 </div>
 
 
@@ -261,7 +266,7 @@ function AddSchComp() {
                             field: { onChange, onBlur, value, name, ref },
                         }) => (
                             <Select
-                                options={[{ id: 0, value: 0, label: "Female" }, { id: 1, value: 1, label: "Male" }]}
+                                options={genderList}
                                 onChange={onChange}
                                 isMulti={true}
                                 onBlur={onBlur}

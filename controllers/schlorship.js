@@ -30,10 +30,12 @@ exports.getAllSch = async (req, res, next) => {
                     $and: [
                         { $expr: { $in: [req.body.fromWhere, '$fromWhere'] } },
                         { $expr: { $in: [req.body.caste, '$caste'] } },
+                        { $expr: { $in: [req.body.region, '$region'] } },
                         { $expr: { $in: [req.body.educationType, '$educationType'] } },
-                        { $expr: { $in: [req.body.authority, '$authority'] } },
                         { $expr: { $in: [req.body.gender, '$gender'] } },
-                        {percentage: { $lte: req.body.percentage }}
+                        { $expr: { $in: [req.body.lastExam, '$examList'] } },
+                        {percentage: { $lte: req.body.percentage }},
+                        {annualIncome: { $gte: req.body.annualIncome }}
                     ]
                 }
             },
@@ -95,7 +97,6 @@ exports.getSchById = async (req, res, next) => {
                     from: "castes",
                     localField: "caste",
                     foreignField: "indexId",
-
                     as: "caste"
                 }
             },

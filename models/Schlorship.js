@@ -7,7 +7,7 @@ const SchlorshipRef = new mongoose.Schema({
     },
     region: [
         {
-            type: mongoose.SchemaTypes.ObjectId,
+            type: Number,
             ref: 'Region'
         }
     ],
@@ -28,12 +28,12 @@ const SchlorshipRef = new mongoose.Schema({
             ref: 'Caste'
         }
     ],
-    annualIncome: [
+    annualIncome:
         {
             type: Number,
             ref: 'AnnualIncome'
         }
-    ],
+    ,
     percentage: 
         {
             type: Number,

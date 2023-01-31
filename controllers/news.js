@@ -28,10 +28,7 @@ exports.addNews = async (req, res, next) => {
       readStatus:false
     } 
 
-    
-
     await User.updateMany({ $or: [{ "interest.name": "math" }, { "interest.name": "science" }] }, { $push: { notifications: notifyPayload } }, { $new: true });
-
     await sendPushNotification(news)
 
 
