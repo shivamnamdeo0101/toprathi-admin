@@ -3,19 +3,17 @@ import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { useHistory, useParams } from 'react-router-dom';
 import NewsService from '../../service/api/NewsService';
 import Select from 'react-select';
+import { useSelector } from 'react-redux';
 function AddPostComp() {
     const history = useHistory();
-
+    const sch = useSelector(state => state?.sch)
+    
     const { newsAdd } = NewsService;
     const [image, setimage] = useState("");
 
+    
 
-
-    const options = [
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' },
-    ];
+    
     const [tags, settags] = useState([]);
     const [news_data, setnews_data] = useState({});
 
@@ -31,6 +29,7 @@ function AddPostComp() {
         name: "insight_arr"
     });
 
+    const user = useSelector(state=>state.userAuth.user);
 
 
     const onSubmit = data => {
@@ -41,7 +40,7 @@ function AddPostComp() {
             "form_link": data.form_link,
             "read_more_link": data.read_more_link,
             "timestamp": Date.now(),
-            "author": "shivam",
+            "author": user?.user?._id,
             "image": data?.image ? data?.image : "https://yaffa-cdn.s3.amazonaws.com/yaffadsp/images/dmImage/SourceImage/news-corp-359.jpg",
             "views": 1,
             "tags": tags,
@@ -194,7 +193,7 @@ function AddPostComp() {
                         <Select
                             defaultValue={tags}
                             onChange={settags}
-                            options={options}
+                            options={sch?.interest}
                             isMulti={true}
                             isSearchable={true}
                         />

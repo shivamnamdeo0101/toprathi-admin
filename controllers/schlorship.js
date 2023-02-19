@@ -25,24 +25,39 @@ exports.getAllSch = async (req, res, next) => {
         // const list = await Schlorship.find({})
         
         const list = await Schlorship.aggregate([
-            {
+            {   
+                
+
                 $match: {
                     $and: [
-                        { $expr: { $in: [req.body.fromWhere, '$fromWhere'] } },
-                        { $expr: { $in: [req.body.caste, '$caste'] } },
-                        { $expr: { $in: [req.body.region, '$region'] } },
-                        { $expr: { $in: [req.body.educationType, '$educationType'] } },
-                        { $expr: { $in: [req.body.gender, '$gender'] } },
-                        { $expr: { $in: [req.body.lastExam, '$examList'] } },
-                        {percentage: { $lte: req.body.percentage }},
-                        {annualIncome: { $gte: req.body.annualIncome }}
+                         { $expr: { $in: [req.body.fromWhere, '$fromWhere'] } },
+                        // { $expr: { $in: [req.body.annualIncome, '$annualIncome'] } },
+                        // { $expr: { $in: [req.body.caste, '$caste'] } },
+                        
+                        // { $expr: { $in: [req.body.region, '$region'] } },
+                        // { $expr: { $in: [req.body.educationType, '$educationType'] } },
+                        // { $expr: { $in: [req.body.gender, '$gender'] } },
+                        
+                        // { $expr: { $in: [req.body.examList, '$examList'] } },
+                        // { $expr: { $in: [req.body.branch, '$branch'] } },
+                        // { $expr: { $in: [req.body.stream, '$stream'] } },
+                        
+                        { $expr: { $in: [req.body.degreeName, '$degreeName'] } },
+                        // { $expr: { $in: [req.body.currClass, '$currClass'] } },
+                        // { $expr: { $in: [req.body.compExam, '$examList'] } },
+
+
+                        // {xIIPercent: { $lte: req.body.xIIPercent }},
+                        // {xPercent: { $lte: req.body.xPercent }},
+
+                        // {lastYearCollegePercent: { $lte: req.body.lastYearCollegePercent }},
+                        // {lastClassExamPercent: { $lte: req.body.lastClassExamPercent }},
+                        // {compExamRank: { $lte: req.body.compExamRank }},
+                        
                     ]
                 }
             },
            
-           
-
-
             {$sort:{'updateAt':-1}}
 
 
@@ -107,6 +122,15 @@ exports.getSchById = async (req, res, next) => {
                     localField: "educationType",
                     foreignField: "indexId",
                     as: "educationType"
+                }
+            },
+            {
+                $lookup:
+                {
+                    from: "degreenames",
+                    localField: "degreeName",
+                    foreignField: "indexId",
+                    as: "degreeName"
                 }
             },
             

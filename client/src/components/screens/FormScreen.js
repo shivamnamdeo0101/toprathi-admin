@@ -24,6 +24,7 @@ function FormScreen() {
         "stream":sch?.stream,
         "annualincome":sch?.annualIncome,
         "percentage":sch?.percentage,
+        "degreename":sch?.degreeName,
     }
 
    

@@ -20,21 +20,28 @@ exports.addNews = async (req, res, next) => {
       title, content, image, timestamp, author, views, tags, addAt, updatedAt, read_more_link, form_link, news_type, poll_title, poll_user_responses, insight_arr
     });
 
-    const notification = await Notification.create({"text":news.title,timestamp:Date.now(),image:news.image})
+    const notification = await Notification.create({ "text": news.title, timestamp: Date.now(), image: news.image })
 
     const notifyPayload = {
       notifyId: notification._id,
-      refId:news._id,
-      readStatus:false
-    } 
+      refId: news._id,
+      readStatus: false
+    }
 
-    await User.updateMany({ $or: [{ "interest.name": "math" }, { "interest.name": "science" }] }, { $push: { notifications: notifyPayload } }, { $new: true });
-    await sendPushNotification(news)
+    await User.updateMany(
+      { "interest.label": { $in: news.tags.map(tag => tag.label) } },
+      { $push: { notifications: notifyPayload } },
+      { new: true });
+
+
+    news.tags.forEach(async (tag) => { 
+      await sendPushNotification(news,tag.label);
+    });
 
 
     res.status(201).json({
       success: true,
-      data: notification,
+      data: notification,  
 
     });
   } catch (err) {
@@ -95,10 +102,10 @@ exports.addSlide = async (req, res, next) => {
         }
 
       },
-     
+
       { $unwind: { path: "$news" } },
-      { $project: {_id:0, newsId: '$news._id',timestamp: '$news.title',image: '$news.image',addAt: { $first: "$post_collections.addAt" }, }},
-     { $sort: { timestamp: 1 } }
+      { $project: { _id: 0, newsId: '$news._id', timestamp: '$news.title', image: '$news.image', addAt: { $first: "$post_collections.addAt" }, } },
+      { $sort: { timestamp: 1 } }
 
     ])
 
@@ -122,7 +129,7 @@ exports.searchTitle = async (req, res, next) => {
 
   const limit = 100;
   let query = req.params.query;
-  let search = await News.find({ "title": { $regex: new RegExp(query, "i") } }).select(['_id','title','timestamp']) .sort([['title',1],['timestamp',-1]]).limit(Number(limit))
+  let search = await News.find({ "title": { $regex: new RegExp(query, "i") } }).select(['_id', 'title', 'timestamp']).sort([['title', 1], ['timestamp', -1]]).limit(Number(limit))
 
   // const news = await News.find({}, query).populate({ path: 'category', select: ['_id', 'category_name'] }).populate({ path: 'addedBy', select: ['name', 'email']})
   res.json({
@@ -137,19 +144,19 @@ exports.searchTitle = async (req, res, next) => {
 exports.searchNews = async (req, res, next) => {
 
   const pageNo = req.params.pageNo;
-  const size = 8; 
+  const size = 8;
   const skip = size * (pageNo - 1);
   const limit = size;
   let query = req.params.query;
   //let total = await News.find({ "title": { $regex: new RegExp(query, "i") } }).countDocuments()
-  let search = await News.find({ "title": { $regex: new RegExp(query, "i") } }).select(['_id','timestamp','image','tags','title','content']) .sort([['title',1],['timestamp',-1]]).limit(Number(limit))
-  .skip(Number(skip));
+  let search = await News.find({ "title": { $regex: new RegExp(query, "i") } }).select(['_id', 'timestamp', 'image', 'tags', 'title', 'content']).sort([['title', 1], ['timestamp', -1]]).limit(Number(limit))
+    .skip(Number(skip));
 
   // const news = await News.find({}, query).populate({ path: 'category', select: ['_id', 'category_name'] }).populate({ path: 'addedBy', select: ['name', 'email']})
   res.json({
     success: true,
     query: query,
-    pageNo:pageNo,
+    pageNo: pageNo,
     count: search.length,
     data: search,
 
@@ -294,7 +301,7 @@ exports.getNews = async (req, res, next) => {
   query.skip = size * (pageNo - 1);
   query.limit = size;
 
-  let result = await News.find({ news_type: { $in: ['feed','insight','slide'] } })
+  let result = await News.find({ news_type: { $in: ['feed', 'insight', 'slide'] } })
     // .select(["_id","image","timestamp","tags","title","content"])
     .sort({ 'timestamp': 'desc' })
     .populate({ path: "addAt", select: ["_id"] })
@@ -302,7 +309,7 @@ exports.getNews = async (req, res, next) => {
     .limit(Number(query.limit))
     .skip(Number(query.skip));
 
-  
+
   // setCache("news_array.id=", news_key, result)
   // setCache("news_array.id=", "total_news", total_news.length)
   // const news = await News.find({}, query).populate({ path: 'category', select: ['_id', 'category_name'] }).populate({ path: 'addedBy', select: ['name', 'email']})

@@ -11,6 +11,12 @@ const SchlorshipRef = new mongoose.Schema({
             ref: 'Region'
         }
     ],
+    degreeName: [
+        {
+            type: Number,
+            ref: 'DegreeName'
+        }
+    ],
     schlorshipData: {
         type: mongoose.SchemaTypes.Mixed,
     },
@@ -28,28 +34,43 @@ const SchlorshipRef = new mongoose.Schema({
             ref: 'Caste'
         }
     ],
-    annualIncome:
+    annualIncome: [
         {
             type: Number,
             ref: 'AnnualIncome'
         }
-    ,
-    percentage: 
+    ],
+    degreeName: [
         {
             type: Number,
-            ref: 'Percentage'
+            ref: 'AnnualIncome'
         }
-    ,
-    age: {
-        min: {
-            type: Number,
-        },
-        max: {
-            type: Number,
-        },
-
+    ],
+    compExamRank: {
+        type: Number,
     },
-      
+    lastYearCollegePercent: {
+        type: Number,
+    },
+    lastClassExamPercent: {
+        type: Number,
+    },
+    currClass: [
+        {
+            type: Number,
+        }
+    ],
+
+    // age: {
+    //     min: {
+    //         type: Number,
+    //     },
+    //     max: {
+    //         type: Number,
+    //     },
+
+    // },
+
     authority: [
         {
             type: Number,
@@ -77,6 +98,18 @@ const SchlorshipRef = new mongoose.Schema({
         {
             type: Number,
             ref: 'examList'
+        },
+    ],
+    branch: [
+        {
+            type: Number,
+            ref: 'Branch'
+        },
+    ],
+    stream: [
+        {
+            type: Number,
+            ref: 'Stream'
         },
     ],
 });

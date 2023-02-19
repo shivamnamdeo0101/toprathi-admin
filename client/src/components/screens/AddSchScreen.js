@@ -22,6 +22,7 @@ const AddSchScreen = ({ history }) => {
     const [schData, setschData] = useState({})
     const {schId} = useParams();
 
+    
     const {getSchById} = SchService;
 
     useEffect(() => {

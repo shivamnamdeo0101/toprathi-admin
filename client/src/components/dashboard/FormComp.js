@@ -29,8 +29,6 @@ function FormComp({ type, list }) {
 
     };
 
-    console.log(list)
-
 
     return (
 

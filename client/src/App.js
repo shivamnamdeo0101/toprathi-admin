@@ -18,7 +18,7 @@ import EmailVerifyScreen from "./components/screens/EmailVerifyScreen";
 import AddSchScreen from "./components/screens/AddSchScreen";
 import SchFilterService from "./service/api/SchFilterService";
 import { useEffect } from 'react';
-import { setAnnualIncomeList, setAuthority, setBranchList, setCaste, setEducationType, setExamList, setFromWhere, setInterestList, setPercentageList, setRegion, setStreamList } from "./store/SchFilterSlice";
+import { setAnnualIncomeList, setAuthority, setBranchList, setCaste, setDegreeNameList, setEducationType, setExamList, setFromWhere, setInterestList, setPercentageList, setRegion, setStreamList } from "./store/SchFilterSlice";
 import FormScreen from "./components/screens/FormScreen";
 
 
@@ -38,7 +38,7 @@ const App = () => {
       config.headers.Authorization = `Bearer ${user.token}`;
     }
 
-
+    
     return config;
   }, function (error) {
     // Do something with request error
@@ -92,6 +92,9 @@ const App = () => {
       })
       await getFilter("annualincome").then((res) => {
         dispatch(setAnnualIncomeList(res?.data))
+      })
+      await getFilter("degreename").then((res) => {
+        dispatch(setDegreeNameList(res?.data))
       })
     }
 

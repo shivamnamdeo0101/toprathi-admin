@@ -17,7 +17,7 @@ function SchList() {
       }
 
       fetchData()
-    }, [list])
+    }, [])
         
 
     return (

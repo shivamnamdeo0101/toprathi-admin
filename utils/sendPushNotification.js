@@ -1,8 +1,8 @@
 const { default: axios } = require("axios")
 
-const sendPushNotification = async (payload) => {
+const sendPushNotification = async (payload,tag) => {
   var data = JSON.stringify({
-    "to": "/topics/science",
+    "to": "/topics/"+tag,
     "notification": {
       "title": payload.title,
       "body": payload.content,
@@ -10,7 +10,7 @@ const sendPushNotification = async (payload) => {
       "sound": "Tri-tone"
     },
     "data": {
-      "url": "https://www.01net.com/app/uploads/2020/12/MEA-Photos-App-windows-10-1.jpg",
+      "url": payload.image,
       "dl": "<deeplink action on tap of notification>"
     }
   });

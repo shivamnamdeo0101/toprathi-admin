@@ -2,6 +2,7 @@ const AnnualIncome = require("../models/AnnualIncome");
 const Authority = require("../models/Authority");
 const Branch = require("../models/Branch");
 const Caste = require("../models/Caste");
+const DegreeName = require("../models/DegreeName");
 const EducationType = require("../models/EducationType");
 const ExamList = require("../models/ExamList");
 const FromWhere = require("../models/FromWhere");
@@ -42,6 +43,8 @@ exports.addFilter = async (req, res, next) => {
             data = await AnnualIncome.create(req.body);
         }else if(type === "percentage"){
             data = await Percentage.create(req.body);
+        }else if(type === "degreename"){
+            data = await DegreeName.create(req.body);
         }
 
     
@@ -54,9 +57,6 @@ exports.addFilter = async (req, res, next) => {
         next(err);
     }
 };
-
-
-
 
 
 exports.getFilter = async (req, res, next) => {
@@ -87,6 +87,8 @@ exports.getFilter = async (req, res, next) => {
             data = await Percentage.find({});
         }else if(type === "annualincome"){
             data = await AnnualIncome.find({});
+        }else if(type === "degreename"){
+            data = await DegreeName.find({});
         }
         
         if(data === []){
