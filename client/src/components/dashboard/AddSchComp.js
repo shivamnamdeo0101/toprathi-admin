@@ -114,6 +114,8 @@ const classList = [
 
     const onSubmit = async (data) => {
 
+        
+
         const obj = {
             ...data, 
             fromWhere: getArrIndex(data?.fromWhere),
@@ -138,6 +140,10 @@ const classList = [
 
             branch:getArrIndex(data?.branch),
 
+            xIIPercent:parseInt(data?.xIIPercent),
+            xPercent:parseInt(data?.xPercent),
+
+
             // age: {
             //     min: data?.age_min,
             //     max: data?.age_max
@@ -147,9 +153,12 @@ const classList = [
                 htmlText:editoValue,
                 docRequired: docRequired,
                 impNotes: impNotes,
-                schDetails: schDetails
+                schDetails: schDetails,
+                
             }
         }
+
+        console.log(obj)
         await addSchAdmin(obj).then((res) => {
             console.log(res,"res---------------->")
         })

@@ -22,46 +22,73 @@ exports.addSch = async (req, res, next) => {
 exports.getAllSch = async (req, res, next) => {
     try {
 
-        // const list = await Schlorship.find({})
-        
-        const list = await Schlorship.aggregate([
-            {   
-                
+        let list;
 
-                $match: {
-                    $and: [
-                         { $expr: { $in: [req.body.fromWhere, '$fromWhere'] } },
-                        // { $expr: { $in: [req.body.annualIncome, '$annualIncome'] } },
-                        // { $expr: { $in: [req.body.caste, '$caste'] } },
-                        
-                        // { $expr: { $in: [req.body.region, '$region'] } },
-                        // { $expr: { $in: [req.body.educationType, '$educationType'] } },
-                        // { $expr: { $in: [req.body.gender, '$gender'] } },
-                        
-                        // { $expr: { $in: [req.body.examList, '$examList'] } },
-                        // { $expr: { $in: [req.body.branch, '$branch'] } },
-                        // { $expr: { $in: [req.body.stream, '$stream'] } },
-                        
-                        { $expr: { $in: [req.body.degreeName, '$degreeName'] } },
-                        // { $expr: { $in: [req.body.currClass, '$currClass'] } },
-                        // { $expr: { $in: [req.body.compExam, '$examList'] } },
+        if (req.body.fromWhere === 1) {
+            list = await Schlorship.aggregate([
+                {
+                    $match: {
+                        $and: [
+                            { $expr: { $in: [req.body.fromWhere, '$fromWhere'] } },
+                            { $expr: { $in: [req.body.annualIncome, '$annualIncome'] } },
+                            { $expr: { $in: [req.body.caste, '$caste'] } },
 
+                            { $expr: { $in: [req.body.region, '$region'] } },
+                            { $expr: { $in: [req.body.educationType, '$educationType'] } },
+                            { $expr: { $in: [req.body.gender, '$gender'] } },
 
-                        // {xIIPercent: { $lte: req.body.xIIPercent }},
-                        // {xPercent: { $lte: req.body.xPercent }},
+                            { $expr: { $in: [req.body.stream, '$stream'] } },
+                            { $expr: { $in: [req.body.currClass, '$currClass'] } },
+                            { lastClassExamPercent: { $lte: req.body.lastClassExamPercent } }
 
-                        // {lastYearCollegePercent: { $lte: req.body.lastYearCollegePercent }},
-                        // {lastClassExamPercent: { $lte: req.body.lastClassExamPercent }},
-                        // {compExamRank: { $lte: req.body.compExamRank }},
-                        
-                    ]
-                }
-            },
-           
-            {$sort:{'updateAt':-1}}
+                        ]
+                    }
+                },
+
+                { $sort: { 'updateAt': -1 } }
 
 
-        ])
+            ])
+
+
+            
+        } else {
+            list = await Schlorship.aggregate([
+                {
+                    $match: {
+                        $and: [
+                            { $expr: { $in: [req.body.fromWhere, '$fromWhere'] } },
+                            { $expr: { $in: [req.body.annualIncome, '$annualIncome'] } },
+                            { $expr: { $in: [req.body.caste, '$caste'] } },
+                            
+                            { $expr: { $in: [req.body.region, '$region'] } },
+                            { $expr: { $in: [req.body.educationType, '$educationType'] } },
+                            { $expr: { $in: [req.body.gender, '$gender'] } },
+
+                            { $expr: { $in: [req.body.branch, '$branch'] } },
+                            { $expr: { $in: [req.body.degreeName, '$degreeName'] } },
+                            
+
+                            { $expr: { $in: [req.body.compExam, '$examList'] } },
+                            { lastYearCollegePercent: { $lte: req.body.lastYearCollegePercent } },
+                            { compExamRank: { $gte: req.body.compExamRank } },
+
+                            { xIIPercent: { $lte: req.body.xIIPercent } },
+                            { xPercent: { $lte: req.body.xPercent } }
+                            
+
+                        ]
+                    }
+                },
+
+                { $sort: { 'updateAt': -1 } }
+
+
+            ])
+        }
+
+
+
 
 
 
@@ -87,7 +114,7 @@ exports.getSchById = async (req, res, next) => {
 
         const list = await Schlorship.aggregate([
             { $match: { _id: id } },
-           
+
             {
                 $lookup:
                 {
@@ -133,7 +160,7 @@ exports.getSchById = async (req, res, next) => {
                     as: "degreeName"
                 }
             },
-            
+
             {
                 $lookup:
                 {
@@ -144,10 +171,10 @@ exports.getSchById = async (req, res, next) => {
                 }
             },
 
-          
+
         ])
 
-    
+
         res.status(201).json({
             success: true,
             length: list.length,
@@ -167,7 +194,7 @@ exports.getSchById = async (req, res, next) => {
 exports.getAllSchAdmin = async (req, res, next) => {
     try {
 
-        const list = await Schlorship.find({}).sort({'addAt':-1})
+        const list = await Schlorship.find({}).sort({ 'addAt': -1 })
 
         res.status(201).json({
             success: true,

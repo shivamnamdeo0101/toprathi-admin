@@ -117,7 +117,6 @@ const App = () => {
 
 
 
-
         <PrivateRoute exact path="/" component={PrivateScreen} />
         <Route exact path="/login" component={LoginScreen} />
         <Route exact path="/register" component={RegisterScreen} />
@@ -131,6 +130,8 @@ const App = () => {
           path="/passwordreset/:resetToken"
           component={ResetPasswordScreen}
         />
+
+        
         <Route
           exact
           path="/email-verify/:emailToken"

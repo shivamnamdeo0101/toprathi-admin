@@ -11,6 +11,16 @@ const SchlorshipRef = new mongoose.Schema({
             ref: 'Region'
         }
     ],
+    xIIPercent: [
+        {
+            type: Number,
+        }
+    ],
+    xPercent: [
+        {
+            type: Number,
+        }
+    ],
     degreeName: [
         {
             type: Number,
