@@ -34,7 +34,6 @@ exports.getAllSch = async (req, res, next) => {
                             { $expr: { $in: [req.body.caste, '$caste'] } },
 
                             { $expr: { $in: [req.body.region, '$region'] } },
-                            { $expr: { $in: [req.body.educationType, '$educationType'] } },
                             { $expr: { $in: [req.body.gender, '$gender'] } },
 
                             { $expr: { $in: [req.body.stream, '$stream'] } },
