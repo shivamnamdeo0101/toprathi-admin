@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 
 const NewsSchema = new mongoose.Schema({
     author: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
     },
     title: {
         type: String
